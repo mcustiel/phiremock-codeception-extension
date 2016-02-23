@@ -27,8 +27,7 @@ class Phiremock extends CodeceptionExtension
     public static $events = [];
 
     protected $config = [
-        'listen'   => '0.0.0.0:8086',
-        'bin_path' => Config::projectDir() . '../vendor/bin'
+        'listen'   => '0.0.0.0:8086'
     ];
 
     /**
@@ -49,16 +48,15 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcess $process = null
     ) {
+        $this->config['bin_path'] = Config::projectDir() . '../vendor/bin';
+        $this->config['logs_path'] = Config::logDir();
         parent::__construct($config, $options);
 
         $this->initProcess($process);
 
-        $this->config = $this->argumentsManager->sanitize($this->config);
-
         list($ip, $port) = explode(':', $this->config['listen']);
-        //$executablePath = $this->config['bin_path'] ?: $this->getRootDir() . '../vendor/bin';
         $executablePath = $this->config['bin_path'];
-        $this->process->start($ip, $port, $executablePath);
+        $this->process->start($ip, $port, $executablePath, $this->config['logs_path']);
     }
 
     private function initProcess($process)
