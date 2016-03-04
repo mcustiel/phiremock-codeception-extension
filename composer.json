@@ -1,11 +1,16 @@
 {
- "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/mcustiel/phiremock"
-        }
-    ],
-    "authors" : [{
+	"keywords" : [
+		"http",
+		"mock",
+		"server",
+		"external",
+		"acceptance",
+		"tests",
+		"codeception",
+		"extension",
+		"phiremock"
+	],
+     "authors" : [{
 			"name" : "Mariano Custiel",
 			"email" : "jmcustiel@gmail.com",
 			"homepage" : "https://github.com/mcustiel",
@@ -17,7 +22,7 @@
 			"Codeception\\" : "src"
 		}
 	},
-	"name" : "mcustiel/test-phiremock",
+	"name" : "mcustiel/phiremock-codeception-extension",
 	"type" : "project",
 	 "require" : {
         "php" : ">=5.5",
