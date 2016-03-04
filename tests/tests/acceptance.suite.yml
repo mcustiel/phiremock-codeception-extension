@@ -9,4 +9,9 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
+        - Phiremock:
+            host: 127.0.0.1
+            port: 18080
         - \Helper\Acceptance
+        - Asserts
+        

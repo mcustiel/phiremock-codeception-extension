@@ -52,7 +52,7 @@ class PhiremockProcess
         $this->checkIfProcessIsRunning();
 
         $this->process = proc_open(
-            $this->getCommandPrefix() . "php {$path}/phiremock -i {$ip} -p {$port}",
+            $this->getCommandPrefix() . "{$path}/phiremock -i {$ip} -p {$port}",
             $this->createProcessDescriptors($logsPath),
             $this->pipes,
             null,
@@ -118,6 +118,7 @@ class PhiremockProcess
                     fclose($pipe);
                 }
             }
+            proc_terminate($this->process, SIGKILL);
             proc_close($this->process);
             unset($this->process);
         }

@@ -11,16 +11,9 @@ settings:
     memory_limit: 1024M
 extensions:
     enabled:
-        - Codeception\Extension\RunFailed
-        - Codeception\Extension\Phiremock
+        - \Codeception\Extension\RunFailed
+        - \Codeception\Extension\Phiremock
     config:
-        Codeception\Extension\Phiremock:
+        \Codeception\Extension\Phiremock:
             listen: 0.0.0.0:18080
-modules:
-    enabled:
-        - Phiremock
-    config:
-        Phiremock:
-            host: 127.0.0.1
-            port: 18080
         

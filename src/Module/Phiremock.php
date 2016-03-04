@@ -16,16 +16,40 @@ class Phiremock extends CodeceptionModule
 
     public function _beforeSuite($settings = [])
     {
+        $this->config = array_merge($this->config, $settings);
         $this->phiremock = new PhiremockClient($this->config['host'], $this->config['port']);
     }
 
-    public function expectRequest(Expectation $expectation)
+    public function expectARequestToRemoteServiceWithAResponse(Expectation $expectation)
     {
-
+        $this->phiremock->createExpectation($expectation);
     }
 
-    public function verifyExecutions(RequestBuilder $builder)
+    public function haveACleanSetupInRemoteService()
     {
-        $expectation = PhiremockClient::on($builder)->then(Respond::withStatusCode(200));
+        $this->phiremock->clearExpectations();
+        $this->phiremock->resetRequestsCounter();
+        $this->phiremock->resetScenarios();
+    }
+
+    public function dontExpectRequestsInRemoteService()
+    {
+        $this->phiremock->clearExpectations();
+        $this->phiremock->resetRequestsCounter();
+    }
+
+    public function haveCleanScenariosInRemoteService()
+    {
+        $this->phiremock->resetScenarios();
+    }
+
+    public function seeRemoteServiceReceived($times, RequestBuilder $builder)
+    {
+        $requests = $this->phiremock->countExecutions($builder);
+        if ($times != $requests) {
+            throw new \Exception(
+                "Request expected to be executed $times times, called $requests times instead"
+            );
+        }
     }
 }
