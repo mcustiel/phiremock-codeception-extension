@@ -1,10 +1,24 @@
 # phiremock-codeception-extension
 Codeception extension and module to make working with Phiremock even easier. It allows to start a Phiremock server  specifically for the acceptance tests to run or to connect to an already running Phiremock server.
 
-## Extension
+# Installation
+
+### Composer:
+
+This project is published in packagist, so you just need to add it as a dependency in your composer.json:
+
+```json
+    "require": {
+        "mcustiel/phiremock-codeception-extension": "*"
+    }
+```
+
+## How to use
+
+### Extension
 The extension provides an easy way to start a Phiremock server with configured host, port, debug mode and logs path.
 
-### Configuration
+#### Configuration
 In codeception.yml you will need to enable Phiremock extension and configure it in a proper way:
 
 ```yaml
@@ -19,10 +33,10 @@ extensions:
             debug: true # defaults to false
 ```
 
-## Module
+### Module
 The module allows you to connect to a Phiremock server and to interact with it in a semantic way through the codeception actor in your tests.
 
-### Configuration
+#### Configuration
 You need to enable Phiremock module in your suite's configuration file:
 
 ```yaml
@@ -33,7 +47,7 @@ modules:
             port: 18080
 ```
 
-### Use
+#### Use
 The module provides the following handy methods to communicate with Phiremock server:
 
 #### expectARequestToRemoteServiceWithAResponse
@@ -49,28 +63,28 @@ Allows you to setup an expectation in Phiremock, specifying the expected request
     );
 ```
 
-### haveACleanSetupInRemoteService
+#### haveACleanSetupInRemoteService
 Cleans the server of all configured expectations, scenarios and requests history.
 
 ```php
     $I->haveACleanSetupInRemoteService();
 ```
 
-### dontExpectRequestsInRemoteService
+#### dontExpectRequestsInRemoteService
 Cleans all previously configured expectations and requests history.
 
 ```php
     $I->dontExpectRequestsInRemoteService();
 ```
 
-### haveCleanScenariosInRemoteService
+#### haveCleanScenariosInRemoteService
 Cleans the state of all scenarios (sets all of them to inital state).
 
 ```php
     $I->haveCleanScenariosInRemoteService();
 ```
 
-### seeRemoteServiceReceived
+#### seeRemoteServiceReceived
 Allows you to verify that the server received a request a given amount of times. This request could or not be previously set up as an expectation.
 
 ```php

@@ -14,6 +14,11 @@ class Phiremock extends CodeceptionModule
         'port' => '8086'
     ];
 
+    /**
+     * @var \Mcustiel\Phiremock\Client\Phiremock
+     */
+    private $phiremock;
+
     public function _beforeSuite($settings = [])
     {
         $this->config = array_merge($this->config, $settings);

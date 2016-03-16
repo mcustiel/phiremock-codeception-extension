@@ -19,6 +19,7 @@ namespace Codeception\Extension;
 
 use Codeception\Extension as CodeceptionExtension;
 use Codeception\Configuration as Config;
+
 /**
  * Codeception Extension for Phiremock
  */
