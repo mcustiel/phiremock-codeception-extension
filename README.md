@@ -1,5 +1,5 @@
 # phiremock-codeception-extension
-Codeception extension and module to make working with Phiremock even easier. It allows to start a Phiremock server  specifically for the acceptance tests to run or to connect to an already running Phiremock server.
+Codeception extension and module to make working with [Phiremock](https://github.com/mcustiel/phiremock) even easier. It allows to start a Phiremock server  specifically for the acceptance tests to run or to connect to an already running Phiremock server.
 
 # Installation
 
