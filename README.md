@@ -8,10 +8,15 @@ Codeception extension and module to make working with [Phiremock](https://github
 This project is published in packagist, so you just need to add it as a dependency in your composer.json:
 
 ```json
-    "require": {
+    "require-dev": {
         "mcustiel/phiremock-codeception-extension": "*"
-    }
+    },
+    "minimum-stability": "dev"
 ```
+
+> *NOTE*
+> Phiremock uses a dev-master version of react/http to work. Because of this, until reactphp guys tag a new 
+> version you will need to set your project's minimum stability to dev. 
 
 ## How to use
 
