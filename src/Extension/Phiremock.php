@@ -29,7 +29,8 @@ class Phiremock extends CodeceptionExtension
 
     protected $config = [
         'listen' => '0.0.0.0:8086',
-        'debug'  => false
+        'debug'  => false,
+        'startDelay' => 0
     ];
 
     /**
@@ -66,6 +67,9 @@ class Phiremock extends CodeceptionExtension
             $this->config['logs_path'],
             $this->config['debug']
         );
+        if ($this->config['startDelay']) {
+            sleep($this->config['startDelay']);
+        }
     }
 
     private function initProcess($process)

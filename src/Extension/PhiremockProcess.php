@@ -27,7 +27,7 @@ class PhiremockProcess
      *
      * @var string
      */
-    const LOG_FILE_NAME = 'phiremock.out';
+    const LOG_FILE_NAME = 'phiremock.log';
 
     /**
      * @var resource

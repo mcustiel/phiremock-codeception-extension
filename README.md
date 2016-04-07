@@ -36,7 +36,16 @@ extensions:
             bin_path: ../vendor/bin # defaults to codeception_dir/../vendor/bin 
             logs_path: /var/log/my_app/tests/logs # defaults to codeception's tests output dir
             debug: true # defaults to false
+            startDelay: 1 # default to 0
 ```
+
+## Parameters
+
+* **listen:** Specifies the interface and port where phiremock must listen for requests
+* **bin_path:** Path where Phiremock "binary" is located
+* **logs_path:** Path where to write the output
+* **debug:** Where to write debug data to log files
+* **startDelay:** Time to wait after Phiremock was started to start running the tests (used to give time to Phiremock to boot) 
 
 ### Module
 The module allows you to connect to a Phiremock server and to interact with it in a semantic way through the codeception actor in your tests.

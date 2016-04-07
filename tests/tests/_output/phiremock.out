@@ -1,3 +1,0 @@
-[2016-03-04 15:00:07] stdoutLogger.INFO: Starting Phiremock... [] []
-[2016-03-04 15:00:07] stdoutLogger.INFO: Phiremock http server listening on 0.0.0.0:18080 [] []
-[2016-03-04 15:00:12] stdoutLogger.INFO: Request received: GET: http://localhost/some/url ||  [] []
