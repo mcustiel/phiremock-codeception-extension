@@ -26,8 +26,9 @@
 	"type" : "project",
 	 "require" : {
         "php" : ">=5.5",
-        "mcustiel/phiremock": "^1.0.0",
-        "codeception/codeception" : "^2.1"
+        "mcustiel/phiremock": "^1.1.0",
+        "codeception/codeception" : "^2.0",
+        "symfony/process": "^3.1"
     },
     "minimum-stability": "dev"
 }

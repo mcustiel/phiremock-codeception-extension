@@ -17,6 +17,9 @@
  */
 namespace Codeception\Extension;
 
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
+
 /**
  * Manages the current running WireMock process.
  */
@@ -30,9 +33,10 @@ class PhiremockProcess
     const LOG_FILE_NAME = 'phiremock.log';
 
     /**
-     * @var resource
+     * @var \Symfony\Component\Process\Process
      */
     private $process;
+
     /**
      * @var resource[]
      */
@@ -49,61 +53,19 @@ class PhiremockProcess
      */
     public function start($ip, $port, $path, $logsPath, $debug)
     {
-        $this->checkIfProcessIsRunning();
+        $builder = new ProcessBuilder(['-i', $ip, '-p', $port]);
+        if ($debug) {
+            $builder->add('-d');
+        }
+        $builder->setPrefix("{$path}/phiremock");
+        $builder->enableOutput();
+        $builder->setOption('bypass_shell', true);
 
-        $this->process = proc_open(
-            $this->getCommandPrefix() . "{$path}/phiremock -i {$ip} -p {$port}" . ($debug? ' -d' : ''),
-            $this->createProcessDescriptors($logsPath),
-            $this->pipes,
-            null,
-            null,
-            ['bypass_shell' => true]
-        );
-        $this->checkProcessIsRunning();
-    }
-
-    /**
-     * @param string $logsPath
-     *
-     * @return array[]
-     */
-    private function createProcessDescriptors($logsPath)
-    {
+        $this->process = $builder->getProcess();
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
-        $descriptors = [
-            ['pipe', 'r'],
-            ['file', $logFile, 'w'],
-            ['file', $logFile, 'a'],
-        ];
-        return $descriptors;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function checkIfProcessIsRunning()
-    {
-        if ($this->process !== null) {
-            throw new \Exception('The server is already running');
-        }
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isRunning()
-    {
-        return isset($this->process) && is_resource($this->process);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function checkProcessIsRunning()
-    {
-        if (!$this->isRunning()) {
-            throw new \Exception('Could not start local phiremock server');
-        }
+        $this->process->start(function ($type, $buffer) use ($logFile) {
+            file_put_contents($logFile, $buffer, FILE_APPEND);
+        });
     }
 
     /**
@@ -111,17 +73,7 @@ class PhiremockProcess
      */
     public function stop()
     {
-        if (is_resource($this->process)) {
-            foreach ($this->pipes as $pipe) {
-                if (is_resource($pipe)) {
-                    fflush($pipe);
-                    fclose($pipe);
-                }
-            }
-            proc_terminate($this->process, SIGKILL);
-            proc_close($this->process);
-            unset($this->process);
-        }
+        $this->process->stop(3, SIGTERM);
     }
 
     /**
