@@ -25,8 +25,14 @@ use Codeception\Configuration as Config;
  */
 class Phiremock extends CodeceptionExtension
 {
+    /**
+     * @var array
+     */
     public static $events = [];
 
+    /**
+     * @var array
+     */
     protected $config = [
         'listen' => '0.0.0.0:8086',
         'debug'  => false,
@@ -34,7 +40,6 @@ class Phiremock extends CodeceptionExtension
     ];
 
     /**
-     *
      * @var PhiremockProcess
      */
     private $process;
@@ -51,7 +56,7 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcess $process = null
     ) {
-        $this->config['bin_path'] = Config::projectDir() . '../vendor/bin';
+        $this->config['bin_path'] = Config::projectDir() . '../vendor/bin/phiremock';
         $this->config['logs_path'] = Config::logDir();
 
         parent::__construct($config, $options);
