@@ -18,7 +18,6 @@
 namespace Codeception\Extension;
 
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Manages the current running WireMock process.
@@ -38,11 +37,6 @@ class PhiremockProcess
     private $process;
 
     /**
-     * @var resource[]
-     */
-    private $pipes;
-
-    /**
      * Starts a wiremock process.
      *
      * @param string $jarPath
@@ -53,19 +47,23 @@ class PhiremockProcess
      */
     public function start($ip, $port, $path, $logsPath, $debug)
     {
-        $builder = new ProcessBuilder(['-i', $ip, '-p', $port]);
+        $phiremockPath = is_file($path) ? $path : "{$path}/phiremock";
+        $this->process = new Process(
+            $this->getCommandPrefix()
+            . "{$phiremockPath} -i {$ip} -p {$port}"
+            . ($debug? ' -d' : '')
+        );
         if ($debug) {
-            $builder->add('-d');
+            echo 'Executing: ' . $this->process->getCommandLine() . PHP_EOL;
         }
-        $builder->setPrefix("{$path}/phiremock");
-        $builder->enableOutput();
-        $builder->setOption('bypass_shell', true);
-
-        $this->process = $builder->getProcess();
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
         $this->process->start(function ($type, $buffer) use ($logFile) {
             file_put_contents($logFile, $buffer, FILE_APPEND);
         });
+        $this->process->setEnhanceSigchildCompatibility(true);
+        if ($this->isWindows()) {
+            $this->process->setEnhanceWindowsCompatibility(true);
+        }
     }
 
     /**
@@ -73,7 +71,8 @@ class PhiremockProcess
      */
     public function stop()
     {
-        $this->process->stop(3, SIGTERM);
+        $this->process->signal(SIGTERM);
+        $this->process->stop(3, SIGKILL);
     }
 
     /**
@@ -81,9 +80,11 @@ class PhiremockProcess
      */
     private function getCommandPrefix()
     {
-        if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT' || PHP_OS == 'Windows') {
-            return '';
-        }
-        return 'exec ';
+        return $this->isWindows() ? '' : 'exec ';
+    }
+
+    private function isWindows()
+    {
+        return PHP_OS == 'WIN32' || PHP_OS == 'WINNT' || PHP_OS == 'Windows';
     }
 }
