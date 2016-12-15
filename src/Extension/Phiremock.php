@@ -28,7 +28,10 @@ class Phiremock extends CodeceptionExtension
     /**
      * @var array
      */
-    public static $events = [];
+    public static $events = [
+        'suite.before' => 'startProcess',
+        'suite.after'  => 'stopProcess',
+    ];
 
     /**
      * @var array
@@ -47,9 +50,9 @@ class Phiremock extends CodeceptionExtension
     /**
      * Class constructor.
      *
-     * @param array              $config
-     * @param array              $options
-     * @param PhireMockProcess   $process  optional PhiremockProcess object
+     * @param array            $config
+     * @param array            $options
+     * @param PhireMockProcess $process optional PhiremockProcess object
      */
     public function __construct(
         array $config,
@@ -58,11 +61,13 @@ class Phiremock extends CodeceptionExtension
     ) {
         $this->config['bin_path'] = Config::projectDir() . '../vendor/bin/phiremock';
         $this->config['logs_path'] = Config::logDir();
-
         parent::__construct($config, $options);
 
         $this->initProcess($process);
+    }
 
+    public function startProcess()
+    {
         list($ip, $port) = explode(':', $this->config['listen']);
 
         $this->process->start(
@@ -79,17 +84,13 @@ class Phiremock extends CodeceptionExtension
 
     private function initProcess($process)
     {
-        if ($process === null) {
-            $this->process = new PhiremockProcess();
-        } else {
-            $this->process = $process;
-        }
+        $this->process = $process === null ? new PhiremockProcess() : $process;
     }
 
     /**
      * Class destructor.
      */
-    public function __destruct()
+    public function stopProcess()
     {
         $this->process->stop();
     }

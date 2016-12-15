@@ -17,4 +17,3 @@ extensions:
         \Codeception\Extension\Phiremock:
             listen: 0.0.0.0:18080
             startDelay: 1
-        

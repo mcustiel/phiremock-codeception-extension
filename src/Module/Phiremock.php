@@ -5,7 +5,6 @@ use Codeception\Module as CodeceptionModule;
 use Mcustiel\Phiremock\Client\Phiremock as PhiremockClient;
 use Mcustiel\Phiremock\Domain\Expectation;
 use Mcustiel\Phiremock\Client\Utils\RequestBuilder;
-use Mcustiel\Phiremock\Client\Utils\Respond;
 
 class Phiremock extends CodeceptionModule
 {

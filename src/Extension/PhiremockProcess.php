@@ -48,14 +48,16 @@ class PhiremockProcess
     public function start($ip, $port, $path, $logsPath, $debug)
     {
         $phiremockPath = is_file($path) ? $path : "{$path}/phiremock";
+        if ($debug) {
+            echo 'Running ' . $this->getCommandPrefix()
+                . "{$phiremockPath} -i {$ip} -p {$port}"
+                . ($debug? ' -d' : '') . PHP_EOL;
+        }
         $this->process = new Process(
             $this->getCommandPrefix()
             . "{$phiremockPath} -i {$ip} -p {$port}"
-            . ($debug? ' -d' : '')
+            . ($debug ? ' -d' : '')
         );
-        if ($debug) {
-            echo 'Executing: ' . $this->process->getCommandLine() . PHP_EOL;
-        }
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
         $this->process->start(function ($type, $buffer) use ($logFile) {
             file_put_contents($logFile, $buffer, FILE_APPEND);
