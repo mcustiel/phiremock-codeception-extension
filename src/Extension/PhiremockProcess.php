@@ -73,8 +73,10 @@ class PhiremockProcess
      */
     public function stop()
     {
-        $this->process->signal(SIGTERM);
-        $this->process->stop(3, SIGKILL);
+        if (!$this->isWindows()) {
+            $this->process->signal(SIGTERM);
+            $this->process->stop(3, SIGKILL);
+        }
     }
 
     /**
