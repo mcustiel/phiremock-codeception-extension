@@ -47,7 +47,7 @@ class PhiremockProcess
      */
     public function start($ip, $port, $path, $logsPath, $debug)
     {
-        $phiremockPath = is_file($path) ? $path : "{$path}/phiremock";
+        $phiremockPath = is_file($path) ? $path : "{$path}".DIRECTORY_SEPARATOR."phiremock";
         if ($debug) {
             echo 'Running ' . $this->getCommandPrefix()
                 . "{$phiremockPath} -i {$ip} -p {$port}"
@@ -73,8 +73,10 @@ class PhiremockProcess
      */
     public function stop()
     {
-        $this->process->signal(SIGTERM);
-        $this->process->stop(3, SIGKILL);
+        if (!$this->isWindows()) {
+            $this->process->signal(SIGTERM);
+            $this->process->stop(3, SIGKILL);
+        }
     }
 
     /**
