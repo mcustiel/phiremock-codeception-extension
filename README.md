@@ -1,6 +1,8 @@
 # phiremock-codeception-extension
 Codeception extension and module to make working with [Phiremock](https://github.com/mcustiel/phiremock) even easier. It allows to start a Phiremock server  specifically for the acceptance tests to run or to connect to an already running Phiremock server.
 
+[![Build Status](https://scrutinizer-ci.com/g/mcustiel/phiremock-codeception-extension/badges/build.png?b=master)](https://scrutinizer-ci.com/g/mcustiel/phiremock-codeception-extension/build-status/master)
+
 # Installation
 
 ### Composer:
