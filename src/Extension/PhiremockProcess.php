@@ -47,6 +47,7 @@ class PhiremockProcess
      */
     public function start($ip, $port, $path, $logsPath, $debug)
     {
+        $path = realpath($path);
         $phiremockPath = is_file($path) ? $path : "{$path}".DIRECTORY_SEPARATOR."phiremock";
         if ($debug) {
             echo 'Running ' . $this->getCommandPrefix()
