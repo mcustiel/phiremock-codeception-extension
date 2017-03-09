@@ -48,7 +48,8 @@ class PhiremockProcess
     public function start($ip, $port, $path, $logsPath, $debug)
     {
         $path = realpath($path);
-        $phiremockPath = is_file($path) ? $path : "{$path}".DIRECTORY_SEPARATOR."phiremock";
+        $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
+      
         if ($debug) {
             echo 'Running ' . $this->getCommandPrefix()
                 . "{$phiremockPath} -i {$ip} -p {$port}"
@@ -88,6 +89,9 @@ class PhiremockProcess
         return $this->isWindows() ? '' : 'exec ';
     }
 
+    /**
+     * @return boolean
+     */
     private function isWindows()
     {
         return PHP_OS == 'WIN32' || PHP_OS == 'WINNT' || PHP_OS == 'Windows';
