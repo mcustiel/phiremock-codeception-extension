@@ -2,30 +2,30 @@
 /**
  * This file is part of codeception-phiremock-extension.
  *
- * codeception-wiremock-extension is free software: you can redistribute it and/or modify
+ * phiremock-codeception-extension is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * codeception-wiremock-extension is distributed in the hope that it will be useful,
+ * phiremock-codeception-extension is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with codeception-wiremock-extension.  If not, see <http://www.gnu.org/licenses/>.
+ * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace Codeception\Extension;
 
 use Symfony\Component\Process\Process;
 
 /**
- * Manages the current running WireMock process.
+ * Manages the current running Phiremock process.
  */
 class PhiremockProcess
 {
     /**
-     * WireMock server log.
+     * Phiremock server log.
      *
      * @var string
      */
@@ -37,13 +37,13 @@ class PhiremockProcess
     private $process;
 
     /**
-     * Starts a wiremock process.
+     * Starts Phiremock.
      *
-     * @param string $jarPath
+     * @param string $ip
+     * @param int    $port
+     * @param string $path
      * @param string $logsPath
-     * @param string $arguments
-     *
-     * @throws \Exception
+     * @param bool   $debug
      */
     public function start($ip, $port, $path, $logsPath, $debug)
     {
