@@ -113,4 +113,4 @@ Allows you to verify that the server received a request a given amount of times.
 
 ### Yii2-Curl
 
-[Yii2-Curl[(https://github.com/linslin/Yii2-Curl) uses phiremock-codeception-extension for functional testing. You can see the configuration for the [extension](https://github.com/linslin/Yii2-Curl/blob/master/codeception.yml) and the [module](https://github.com/linslin/Yii2-Curl/blob/master/tests/functional.suite.yml), as well as how Phiremock is [configured in the tests](https://github.com/linslin/Yii2-Curl/blob/master/tests/functional/httpMockCest.php).
+[Yii2-Curl](https://github.com/linslin/Yii2-Curl) uses phiremock-codeception-extension for functional testing. You can see the configuration for the [extension](https://github.com/linslin/Yii2-Curl/blob/master/codeception.yml) and the [module](https://github.com/linslin/Yii2-Curl/blob/master/tests/functional.suite.yml), as well as how Phiremock is [configured in the tests](https://github.com/linslin/Yii2-Curl/blob/master/tests/functional/httpMockCest.php).
