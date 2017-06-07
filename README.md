@@ -50,6 +50,7 @@ extensions:
 * **logs_path:** Path where to write the output
 * **debug:** Where to write debug data to log files
 * **startDelay:** Time to wait after Phiremock was started to start running the tests (used to give time to Phiremock to boot) 
+* **expect_path:** Specifies a directory to search for json files defining expectations to load by default. Default is ~/.phiremock/expectations
 
 ### Module
 The module allows you to connect to a Phiremock server and to interact with it in a semantic way through the codeception actor in your tests.
