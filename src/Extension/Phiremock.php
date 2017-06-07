@@ -61,7 +61,7 @@ class Phiremock extends CodeceptionExtension
     ) {
         $this->config['bin_path']    = Config::projectDir() . '../vendor/bin/phiremock';
         $this->config['logs_path']   = Config::logDir();
-        $this->config['expect_path'] = null;
+        $this->config['expectations_path'] = null;
 
         parent::__construct($config, $options);
 
@@ -78,7 +78,7 @@ class Phiremock extends CodeceptionExtension
             realpath($this->config['bin_path']),
             realpath($this->config['logs_path']),
             $this->config['debug'],
-            realpath($this->config['expect_path'])
+            realpath($this->config['expectations_path'])
         );
         if ($this->config['startDelay']) {
             sleep($this->config['startDelay']);

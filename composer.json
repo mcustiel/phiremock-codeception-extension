@@ -22,7 +22,7 @@
             "Codeception\\" : "src"
         }
     },
-    "name" : "irven/phiremock-codeception-extension",
+    "name" : "mcustiel/phiremock-codeception-extension",
     "type" : "project",
     "description" : "Codeception extension for PhireMock. Allows to stub remote services for HTTP requests.",
 	"license" : "GPL-3.0+",
@@ -31,6 +31,5 @@
         "mcustiel/phiremock": "^1.3",
         "codeception/codeception" : "^2.0",
         "symfony/process": "^3.1|^2.7.15"
-    },
-    "minimum-stability": "dev"
+    }
 }
