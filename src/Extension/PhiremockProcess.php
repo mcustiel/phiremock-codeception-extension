@@ -45,19 +45,22 @@ class PhiremockProcess
      * @param string $logsPath
      * @param bool   $debug
      */
-    public function start($ip, $port, $path, $logsPath, $debug)
+    public function start($ip, $port, $path, $logsPath, $debug, $expectPath)
     {
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
+        $expectPath    = is_dir($expectPath) ? $expectPath : null;
 
         if ($debug) {
             echo 'Running ' . $this->getCommandPrefix()
                 . "{$phiremockPath} -i {$ip} -p {$port}"
-                . ($debug? ' -d' : '') . PHP_EOL;
+                . ($debug? ' -d' : '')
+                . ($expectPath ? " -e {$expectPath }" : '' ) . PHP_EOL;
         }
         $this->process = new Process(
             $this->getCommandPrefix()
             . "{$phiremockPath} -i {$ip} -p {$port}"
             . ($debug ? ' -d' : '')
+            . ($expectPath ? " -e {$expectPath}" : '' )
         );
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
         $this->process->start(function ($type, $buffer) use ($logFile) {
