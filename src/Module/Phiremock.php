@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Mcustiel\Phiremock\Client\Phiremock as PhiremockClient;
-use Mcustiel\Phiremock\Domain\Expectation;
 use Mcustiel\Phiremock\Client\Utils\RequestBuilder;
+use Mcustiel\Phiremock\Domain\Expectation;
 
 class Phiremock extends CodeceptionModule
 {
@@ -29,7 +30,7 @@ class Phiremock extends CodeceptionModule
      */
     protected $config = [
         'host' => 'localhost',
-        'port' => '8086'
+        'port' => '8086',
     ];
 
     /**
@@ -69,7 +70,7 @@ class Phiremock extends CodeceptionModule
     public function seeRemoteServiceReceived($times, RequestBuilder $builder)
     {
         $requests = $this->phiremock->countExecutions($builder);
-        if ($times != $requests) {
+        if ($times !== $requests) {
             throw new \Exception(
                 "Request expected to be executed $times times, called $requests times instead"
             );

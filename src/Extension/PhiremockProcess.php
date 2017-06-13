@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Codeception\Extension;
 
 use Symfony\Component\Process\Process;
@@ -44,32 +45,20 @@ class PhiremockProcess
      * @param string $path
      * @param string $logsPath
      * @param bool   $debug
+     * @param mixed  $expectationsPath
      */
     public function start($ip, $port, $path, $logsPath, $debug, $expectationsPath)
     {
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
-        $expectationsPath= is_dir($expectationsPath) ? $expectationsPath: '';
+        $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
 
-        if ($debug) {
-            echo 'Running ' . $this->getCommandPrefix()
-                . "{$phiremockPath} -i {$ip} -p {$port}"
-                . ($debug? ' -d' : '')
-                . ($expectationsPath? " -e {$expectationsPath}" : '' ) . PHP_EOL;
-        }
-        $this->process = new Process(
-            $this->getCommandPrefix()
-            . "{$phiremockPath} -i {$ip} -p {$port}"
-            . ($debug ? ' -d' : '')
-            . ($expectationsPath? " -e {$expectationsPath}" : '' )
-        );
+        $this->logPhiremockCommand($ip, $port, $debug, $expectationsPath, $phiremockPath);
+        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath);
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
         $this->process->start(function ($type, $buffer) use ($logFile) {
             file_put_contents($logFile, $buffer, FILE_APPEND);
         });
-        $this->process->setEnhanceSigchildCompatibility(true);
-        if ($this->isWindows()) {
-            $this->process->setEnhanceWindowsCompatibility(true);
-        }
+        $this->setUpProcessCompatibility();
     }
 
     /**
@@ -83,6 +72,48 @@ class PhiremockProcess
         }
     }
 
+    private function setUpProcessCompatibility()
+    {
+        $this->process->setEnhanceSigchildCompatibility(true);
+        if ($this->isWindows()) {
+            $this->process->setEnhanceWindowsCompatibility(true);
+        }
+    }
+
+    /**
+     * @param string $ip
+     * @param int    $port
+     * @param bool   $debug
+     * @param string $expectationsPath
+     * @param string $phiremockPath
+     */
+    private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath)
+    {
+        $this->process = new Process(
+            $this->getCommandPrefix()
+            . "{$phiremockPath} -i {$ip} -p {$port}"
+            . ($debug ? ' -d' : '')
+            . ($expectationsPath ? " -e {$expectationsPath}" : '')
+        );
+    }
+
+    /**
+     * @param string $ip
+     * @param int    $port
+     * @param bool   $debug
+     * @param string $expectationsPath
+     * @param string $phiremockPath
+     */
+    private function logPhiremockCommand($ip, $port, $debug, $expectationsPath, $phiremockPath)
+    {
+        if ($debug) {
+            echo 'Running ' . $this->getCommandPrefix()
+                . "{$phiremockPath} -i {$ip} -p {$port}"
+                . ($debug ? ' -d' : '')
+                . ($expectationsPath ? " -e {$expectationsPath}" : '') . PHP_EOL;
+        }
+    }
+
     /**
      * @return string
      */
@@ -92,10 +123,10 @@ class PhiremockProcess
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function isWindows()
     {
-        return PHP_OS == 'WIN32' || PHP_OS == 'WINNT' || PHP_OS == 'Windows';
+        return PHP_OS === 'WIN32' || PHP_OS === 'WINNT' || PHP_OS === 'Windows';
     }
 }

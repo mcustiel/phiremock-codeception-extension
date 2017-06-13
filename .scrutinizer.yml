@@ -1,17 +1,17 @@
 filter:
-    paths: [src/*]
-    excluded_paths: [vendor/*, test/*]
+  paths: [src/*]
+  excluded_paths: [vendor/*, test/*]
 before_commands:
-    - 'composer install --prefer-source'
+  - 'composer update --prefer-source'
 checks:
-    php: true
+  php: true
 coding_style:
-    php: {  }
+  php: {  }
 build:
-    environment:
-        php:
-            version: 5.6.9
-    tests:
-        override:
-            -
-                command: ./vendor/bin/codecept build -c tests && ./vendor/bin/codecept run acceptance -c tests
+  environment:
+    php:
+      version: 5.6.9
+  tests:
+    override:
+      -
+        command: ./vendor/bin/codecept build -c tests && ./vendor/bin/codecept run acceptance -c tests

@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Codeception\Extension;
 
-use Codeception\Extension as CodeceptionExtension;
 use Codeception\Configuration as Config;
+use Codeception\Extension as CodeceptionExtension;
 
 /**
- * Codeception Extension for Phiremock
+ * Codeception Extension for Phiremock.
  */
 class Phiremock extends CodeceptionExtension
 {
@@ -37,9 +38,9 @@ class Phiremock extends CodeceptionExtension
      * @var array
      */
     protected $config = [
-        'listen' => '0.0.0.0:8086',
-        'debug'  => false,
-        'startDelay' => 0
+        'listen'     => '0.0.0.0:8086',
+        'debug'      => false,
+        'startDelay' => 0,
     ];
 
     /**
@@ -59,8 +60,8 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcess $process = null
     ) {
-        $this->config['bin_path']    = Config::projectDir() . '../vendor/bin/phiremock';
-        $this->config['logs_path']   = Config::logDir();
+        $this->config['bin_path'] = Config::projectDir() . '../vendor/bin/phiremock';
+        $this->config['logs_path'] = Config::logDir();
         $this->config['expectations_path'] = null;
 
         parent::__construct($config, $options);
@@ -78,11 +79,9 @@ class Phiremock extends CodeceptionExtension
             realpath($this->config['bin_path']),
             realpath($this->config['logs_path']),
             $this->config['debug'],
-            realpath($this->config['expectations_path'])
+            $this->config['expectations_path'] ? realpath($this->config['expectations_path']) : null
         );
-        if ($this->config['startDelay']) {
-            sleep($this->config['startDelay']);
-        }
+        $this->executeDelay();
     }
 
     public function stopProcess()
@@ -90,6 +89,16 @@ class Phiremock extends CodeceptionExtension
         $this->process->stop();
     }
 
+    private function executeDelay()
+    {
+        if ($this->config['startDelay']) {
+            sleep($this->config['startDelay']);
+        }
+    }
+
+    /**
+     * @param PhiremockProcess $process
+     */
     private function initProcess($process)
     {
         $this->process = $process === null ? new PhiremockProcess() : $process;
