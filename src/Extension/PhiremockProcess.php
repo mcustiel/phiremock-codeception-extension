@@ -19,6 +19,7 @@
 namespace Codeception\Extension;
 
 use Symfony\Component\Process\Process;
+use Codeception\PHPUnit\Constraint\Page;
 
 /**
  * Manages the current running Phiremock process.
@@ -66,7 +67,7 @@ class PhiremockProcess
      */
     public function stop()
     {
-        if (!$this->isWindows()) {
+        if ($this->isPcntlEnabled()) {
             $this->process->signal(SIGTERM);
             $this->process->stop(3, SIGKILL);
         }
@@ -128,5 +129,13 @@ class PhiremockProcess
     private function isWindows()
     {
         return PHP_OS === 'WIN32' || PHP_OS === 'WINNT' || PHP_OS === 'Windows';
+    }
+
+    /**
+     * @return boolean
+     */
+    private function isPcntlEnabled()
+    {
+        return !$this->isWindows() && defined(SIGTERM);
     }
 }
