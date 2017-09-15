@@ -136,6 +136,6 @@ class PhiremockProcess
      */
     private function isPcntlEnabled()
     {
-        return !$this->isWindows() && defined(SIGTERM);
+        return !$this->isWindows() && defined('SIGTERM');
     }
 }
