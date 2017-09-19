@@ -19,7 +19,6 @@
 namespace Codeception\Extension;
 
 use Symfony\Component\Process\Process;
-use Codeception\PHPUnit\Constraint\Page;
 
 /**
  * Manages the current running Phiremock process.
@@ -132,7 +131,7 @@ class PhiremockProcess
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function isPcntlEnabled()
     {
