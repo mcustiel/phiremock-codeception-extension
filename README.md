@@ -111,6 +111,9 @@ Allows you to verify that the server received a request a given amount of times.
     $I->seeRemoteServiceReceived(1, A::getRequest()->andUrl(Is::equalTo('/some/url')));
 ```
 
+#### didNotReceiveRequestsInRemoteService
+Resets the requests counter for the verifier in Phiremock. 
+
 ## Use case
 
 ### Yii2-Curl
