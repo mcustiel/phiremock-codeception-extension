@@ -30,7 +30,7 @@ class BasicTestCest
         $response = file_get_contents('http://localhost:18080/some/url');
         $I->assertEquals('I am a response', $response);
         $I->seeRemoteServiceReceived(1, A::getRequest()->andUrl(Is::equalTo('/some/url')));
-        $I->haveCleanRequestsCounterInRemoteService();
+        $I->didNotReceiveRequestsInRemoteService();
         $I->seeRemoteServiceReceived(0, A::getRequest()->andUrl(Is::equalTo('/some/url')));
     }
 }
