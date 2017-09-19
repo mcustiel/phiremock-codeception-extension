@@ -44,6 +44,12 @@ extensions:
             expectations_path: /my/expectations/path
 ```
 
+Phiremock uses annotations internally. To be able to run the extension, the annotations autoloader must be activated. To do this, you must add the next lines in the bootstrap file where you include your composer autoloader:
+```php
+$loader = require APP_ROOT . '/vendor/autoload.php';
+\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+```
+
 ## Parameters
 
 * **listen:** Specifies the interface and port where phiremock must listen for requests
