@@ -67,6 +67,11 @@ class Phiremock extends CodeceptionModule
         $this->phiremock->resetScenarios();
     }
 
+    public function haveCleanRequestsCounterInRemoteService()
+    {
+        $this->phiremock->resetRequestsCounter();
+    }
+
     public function seeRemoteServiceReceived($times, RequestBuilder $builder)
     {
         $requests = $this->phiremock->countExecutions($builder);
