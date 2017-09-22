@@ -52,13 +52,12 @@ class PhiremockProcess
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
         $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
 
-        $this->logPhiremockCommand($ip, $port, $debug, $expectationsPath, $phiremockPath);
         $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath);
+        $this->logPhiremockCommand($debug);
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
         $this->process->start(function ($type, $buffer) use ($logFile) {
             file_put_contents($logFile, $buffer, FILE_APPEND);
         });
-        $this->setUpProcessCompatibility();
     }
 
     /**
@@ -66,18 +65,7 @@ class PhiremockProcess
      */
     public function stop()
     {
-        if ($this->isPcntlEnabled()) {
-            $this->process->signal(SIGTERM);
-            $this->process->stop(3, SIGKILL);
-        }
-    }
-
-    private function setUpProcessCompatibility()
-    {
-        $this->process->setEnhanceSigchildCompatibility(true);
-        if ($this->isWindows()) {
-            $this->process->setEnhanceWindowsCompatibility(true);
-        }
+        $this->process->stop(3);
     }
 
     /**
@@ -89,52 +77,32 @@ class PhiremockProcess
      */
     private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath)
     {
-        $this->process = new Process(
-            $this->getCommandPrefix()
-            . "{$phiremockPath} -i {$ip} -p {$port}"
-            . ($debug ? ' -d' : '')
-            . ($expectationsPath ? " -e {$expectationsPath}" : '')
-        );
+        $commandline = [
+            $phiremockPath,
+            '-i',
+            $ip,
+            '-p',
+            $port
+        ];
+        if ($debug) {
+            $commandline[] = '-d';
+        }
+        if ($expectationsPath) {
+            $commandline[] = '-e';
+            $commandline[] = $expectationsPath;
+        }
+
+        // Process wraps the command with 'exec' in UNIX OSs.
+        $this->process = new Process($commandline);
     }
 
     /**
-     * @param string $ip
-     * @param int    $port
-     * @param bool   $debug
-     * @param string $expectationsPath
-     * @param string $phiremockPath
+     * @param bool $debug
      */
-    private function logPhiremockCommand($ip, $port, $debug, $expectationsPath, $phiremockPath)
+    private function logPhiremockCommand($debug)
     {
         if ($debug) {
-            echo 'Running ' . $this->getCommandPrefix()
-                . "{$phiremockPath} -i {$ip} -p {$port}"
-                . ($debug ? ' -d' : '')
-                . ($expectationsPath ? " -e {$expectationsPath}" : '') . PHP_EOL;
+            echo 'Running ' . $this->process->getCommandLine() . PHP_EOL;
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getCommandPrefix()
-    {
-        return $this->isWindows() ? '' : 'exec ';
-    }
-
-    /**
-     * @return bool
-     */
-    private function isWindows()
-    {
-        return PHP_OS === 'WIN32' || PHP_OS === 'WINNT' || PHP_OS === 'Windows';
-    }
-
-    /**
-     * @return bool
-     */
-    private function isPcntlEnabled()
-    {
-        return !$this->isWindows() && defined('SIGTERM');
     }
 }
