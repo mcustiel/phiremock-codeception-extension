@@ -69,7 +69,10 @@ class PhiremockProcess
         if ($this->isPcntlEnabled()) {
             $this->process->signal(SIGTERM);
             $this->process->stop(3, SIGKILL);
+            return;
         }
+
+        $this->process->stop(3);
     }
 
     private function setUpProcessCompatibility()
