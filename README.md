@@ -121,7 +121,7 @@ Allows you to verify that the server received a request a given amount of times.
 Resets the requests counter for the verifier in Phiremock. 
 
 ```php
-    $I->didNotReceiveRequestsInRemoteService(1, A::getRequest()->andUrl(Is::equalTo('/some/url')));
+    $I->didNotReceiveRequestsInRemoteService();
 ```
 
 
