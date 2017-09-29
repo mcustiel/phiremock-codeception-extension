@@ -31,6 +31,7 @@ class Phiremock extends CodeceptionModule
     protected $config = [
         'host' => 'localhost',
         'port' => '8086',
+        'cleanup' => false,
     ];
 
     /**
@@ -44,6 +45,14 @@ class Phiremock extends CodeceptionModule
         $this->phiremock = new PhiremockClient($this->config['host'], $this->config['port']);
     }
 
+    public function _before(TestInterface $test)
+    {
+        if ($this->config['cleanup']) {
+            $this->haveInitialSetupRestored();
+        }
+        parent::_before($test);
+    }
+
     public function expectARequestToRemoteServiceWithAResponse(Expectation $expectation)
     {
         $this->phiremock->createExpectation($expectation);
@@ -54,6 +63,11 @@ class Phiremock extends CodeceptionModule
         $this->phiremock->clearExpectations();
         $this->phiremock->resetRequestsCounter();
         $this->phiremock->resetScenarios();
+    }
+
+    public function haveInitialSetupRestored()
+    {
+        $this->phiremock->restoreExpectations();
     }
 
     public function dontExpectRequestsInRemoteService()
