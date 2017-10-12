@@ -71,6 +71,7 @@ modules:
         - Phiremock:
             host: 127.0.0.1
             port: 18080
+            resetBeforeEachTest: false # if set to true, executes `$I->haveACleanSetupInRemoteService` before each test.
 ```
 
 #### Use
@@ -90,7 +91,7 @@ Allows you to setup an expectation in Phiremock, specifying the expected request
 ```
 
 #### haveACleanSetupInRemoteService
-Cleans the server of all configured expectations, scenarios and requests history.
+Cleans the server of all configured expectations, scenarios and requests history, and reloads expectation files.
 
 ```php
     $I->haveACleanSetupInRemoteService();
@@ -123,7 +124,6 @@ Resets the requests counter for the verifier in Phiremock.
 ```php
     $I->didNotReceiveRequestsInRemoteService();
 ```
-
 
 ## Use case
 

@@ -101,6 +101,6 @@ class Phiremock extends CodeceptionExtension
      */
     private function initProcess($process)
     {
-        $this->process = $process === null ? new PhiremockProcess() : $process;
+        $this->process = null === $process ? new PhiremockProcess() : $process;
     }
 }

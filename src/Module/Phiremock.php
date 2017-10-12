@@ -19,6 +19,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
+use Codeception\TestInterface;
 use Mcustiel\Phiremock\Client\Phiremock as PhiremockClient;
 use Mcustiel\Phiremock\Client\Utils\RequestBuilder;
 use Mcustiel\Phiremock\Domain\Expectation;
@@ -29,9 +30,9 @@ class Phiremock extends CodeceptionModule
      * @var array
      */
     protected $config = [
-        'host' => 'localhost',
-        'port' => '8086',
-        'cleanup' => false,
+        'host'                => 'localhost',
+        'port'                => '8086',
+        'resetBeforeEachTest' => false,
     ];
 
     /**
@@ -47,8 +48,8 @@ class Phiremock extends CodeceptionModule
 
     public function _before(TestInterface $test)
     {
-        if ($this->config['cleanup']) {
-            $this->haveInitialSetupRestored();
+        if ($this->config['resetBeforeEachTest']) {
+            $this->haveACleanSetupInRemoteService();
         }
         parent::_before($test);
     }
@@ -60,14 +61,7 @@ class Phiremock extends CodeceptionModule
 
     public function haveACleanSetupInRemoteService()
     {
-        $this->phiremock->clearExpectations();
-        $this->phiremock->resetRequestsCounter();
-        $this->phiremock->resetScenarios();
-    }
-
-    public function haveInitialSetupRestored()
-    {
-        $this->phiremock->restoreExpectations();
+        $this->phiremock->reset();
     }
 
     public function dontExpectRequestsInRemoteService()
@@ -86,6 +80,12 @@ class Phiremock extends CodeceptionModule
         $this->phiremock->resetRequestsCounter();
     }
 
+    /**
+     * @param int            $times
+     * @param RequestBuilder $builder
+     *
+     * @throws \Exception
+     */
     public function seeRemoteServiceReceived($times, RequestBuilder $builder)
     {
         $requests = $this->phiremock->countExecutions($builder);

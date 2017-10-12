@@ -82,7 +82,7 @@ class PhiremockProcess
             '-i',
             $ip,
             '-p',
-            $port
+            $port,
         ];
         if ($debug) {
             $commandline[] = '-d';
