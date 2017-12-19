@@ -44,6 +44,7 @@ extensions:
             startDelay: 1 # default to 0
             expectations_path: /my/expectations/path
 ```
+Note: Since Codeception version 2.2.7, extensions configuration can be added directly in the suite configuration file. That will avoid phiremock to be started for every suite. 
 
 Phiremock uses annotations internally. To be able to run the extension, the annotations autoloader must be activated. To do this, you must add the next lines in the bootstrap file where you include your composer autoloader:
 ```php
