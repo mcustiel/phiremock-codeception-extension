@@ -93,7 +93,7 @@ class PhiremockProcess
         }
 
         // Process wraps the command with 'exec' in UNIX OSs.
-        $this->process = new Process($commandline);
+        $this->process = new Process(implode(' ', $commandline));
     }
 
     /**
