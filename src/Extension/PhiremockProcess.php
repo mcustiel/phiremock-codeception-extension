@@ -78,7 +78,7 @@ class PhiremockProcess
     private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath)
     {
         $commandline = [
-            $phiremockPath,
+            $this->getCommandPrefix() . $phiremockPath,
             '-i',
             $ip,
             '-p',
@@ -104,5 +104,21 @@ class PhiremockProcess
         if ($debug) {
             echo 'Running ' . $this->process->getCommandLine() . PHP_EOL;
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getCommandPrefix()
+    {
+        return $this->isWindows() ? '' : 'exec ';
+    }
+
+    /**
+     * @return bool
+     */
+    private function isWindows()
+    {
+        return PHP_OS === 'WIN32' || PHP_OS === 'WINNT' || PHP_OS === 'Windows';
     }
 }
