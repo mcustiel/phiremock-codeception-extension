@@ -51,13 +51,10 @@ class PhiremockProcess
     {
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
         $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
-
-        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath);
-        $this->logPhiremockCommand($debug);
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
-        $this->process->start(function ($type, $buffer) use ($logFile) {
-            file_put_contents($logFile, $buffer, FILE_APPEND);
-        });
+        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile);
+        $this->logPhiremockCommand($debug);
+        $this->process->start();
     }
 
     /**
@@ -74,8 +71,9 @@ class PhiremockProcess
      * @param bool   $debug
      * @param string $expectationsPath
      * @param string $phiremockPath
+     * @param string $logFile
      */
-    private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath)
+    private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile)
     {
         $commandline = [
             $this->getCommandPrefix() . $phiremockPath,
@@ -91,8 +89,10 @@ class PhiremockProcess
             $commandline[] = '-e';
             $commandline[] = $expectationsPath;
         }
+        $commandline[] = '>';
+        $commandline[] = $logFile;
+        $commandline[] = '2>&1';
 
-        // Process wraps the command with 'exec' in UNIX OSs.
         $this->process = new Process(implode(' ', $commandline));
     }
 
@@ -119,6 +119,6 @@ class PhiremockProcess
      */
     private function isWindows()
     {
-        return PHP_OS === 'WIN32' || PHP_OS === 'WINNT' || PHP_OS === 'Windows';
+        return DIRECTORY_SEPARATOR === '\\';
     }
 }
