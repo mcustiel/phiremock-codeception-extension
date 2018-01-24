@@ -1,6 +1,7 @@
 <?php
 
 
+use Codeception\Configuration;
 use Mcustiel\Phiremock\Client\Phiremock;
 use Mcustiel\Phiremock\Client\Utils\A;
 use Mcustiel\Phiremock\Client\Utils\Is;
@@ -75,5 +76,20 @@ class BasicTestCest
         $I->seeRemoteServiceReceived(1, A::getRequest()->andUrl(Is::equalTo('/coconut')));
         $I->didNotReceiveRequestsInRemoteService();
         $I->seeRemoteServiceReceived(0, A::getRequest());
+    }
+
+    public function shouldCreateAnExpectationWithBinaryResponseTest(AcceptanceTester $I)
+    {
+        $responseContents = file_get_contents(Configuration::dataDir() . '/fixtures/Sparkles-12543.mp4');
+        $I->expectARequestToRemoteServiceWithAResponse(
+            Phiremock::on(
+                A::getRequest()->andUrl(Is::equalTo('/show-me-the-video'))
+            )->then(
+                Respond::withStatusCode(200)->andBinaryBody($responseContents)
+            )
+        );
+
+        $responseBody = file_get_contents('http://localhost:18080/show-me-the-video');
+        $I->assertEquals($responseContents, $responseBody);
     }
 }
