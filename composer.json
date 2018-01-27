@@ -25,7 +25,7 @@
     "name" : "mcustiel/phiremock-codeception-extension",
     "type" : "project",
     "description" : "Codeception extension for PhireMock. Allows to stub remote services for HTTP requests.",
-	"license" : "GPL-3.0+",
+    "license" : "GPL-3.0-or-later",
     "require" : {
         "php" : ">=5.6",
         "mcustiel/phiremock": "^1.7",
