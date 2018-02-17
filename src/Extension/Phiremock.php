@@ -76,7 +76,7 @@ class Phiremock extends CodeceptionExtension
         $this->process->start(
             $ip,
             $port,
-            realpath($this->config['bin_path']),
+            $this->getBinPath($this->config['bin_path']),
             realpath($this->config['logs_path']),
             $this->config['debug'],
             $this->config['expectations_path'] ? realpath($this->config['expectations_path']) : null
@@ -102,5 +102,15 @@ class Phiremock extends CodeceptionExtension
     private function initProcess($process)
     {
         $this->process = null === $process ? new PhiremockProcess() : $process;
+    }
+
+    private function getBinPath($path)
+    {
+        $currentDirectory = getcwd();
+        chdir(Config::projectDir());
+        $binPath = realpath($path);
+        chdir($currentDirectory);
+
+        return $binPath;
     }
 }
