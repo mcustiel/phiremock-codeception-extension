@@ -95,4 +95,14 @@ class Phiremock extends CodeceptionModule
             );
         }
     }
+    
+    /**
+     * @param RequestBuilder $builder
+     *
+     * @return array
+     */
+    public function grabRequestsMadeToRemoteService(RequestBuilder $builder)
+    {
+        return $this->phiremock->listExecutions($builder);
+    }
 }
