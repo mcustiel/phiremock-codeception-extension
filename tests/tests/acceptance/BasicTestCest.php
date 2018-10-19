@@ -92,4 +92,32 @@ class BasicTestCest
         $responseBody = file_get_contents('http://localhost:18080/show-me-the-video');
         $I->assertEquals($responseContents, $responseBody);
     }
+    
+    public function testGrabRequestsMadeToRemoteService(AcceptanceTester $I)
+    {
+        $requestBuilder = A::postRequest()->andUrl(Is::equalTo('/some/url'));
+        $I->expectARequestToRemoteServiceWithAResponse(
+            Phiremock::on($requestBuilder)->then(Respond::withStatusCode(200))
+        );
+    
+        $options = array(
+            'http' => array(
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'method'  => 'POST',
+                'content' => http_build_query(['a' => 'b'])
+            )
+        );
+        file_get_contents('http://localhost:18080/some/url', false, stream_context_create($options));
+        
+        $requests = $I->grabRequestsMadeToRemoteService($requestBuilder);
+        $I->assertCount(1, $requests);
+        
+        $first = reset($requests);
+        $I->assertEquals('POST', $first->method);
+        $I->assertEquals('a=b', $first->body);
+        $I->assertArraySubset([
+            'Host' => ['localhost:18080'],
+            'Content-Type' => ['application/x-www-form-urlencoded']
+        ], (array) $first->headers);
+    }
 }
