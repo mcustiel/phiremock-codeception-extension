@@ -127,6 +127,13 @@ Resets the requests counter for the verifier in Phiremock.
     $I->didNotReceiveRequestsInRemoteService();
 ```
 
+#### grabRequestsMadeToRemoteService
+Retrieves all the requests received by Phiremock server.
+
+```php
+    $I->grabRequestsMadeToRemoteService();
+```
+
 ## Use case
 
 ### Yii2-Curl
