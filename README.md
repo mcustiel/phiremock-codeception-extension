@@ -128,10 +128,10 @@ Resets the requests counter for the verifier in Phiremock.
 ```
 
 #### grabRequestsMadeToRemoteService
-Retrieves all the requests received by Phiremock server.
+Retrieves all the requests received by Phiremock server matching the one specified.
 
 ```php
-    $I->grabRequestsMadeToRemoteService();
+    $I->grabRequestsMadeToRemoteService(A::getRequest()->andUrl(Is::equalTo('/some/url')));
 ```
 
 ## Use case
