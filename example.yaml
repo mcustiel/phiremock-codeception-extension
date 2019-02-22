@@ -1,7 +1,8 @@
 extensions:
   Phiremock:
     listen: 0.0.0.0:18080
-module:
-  Phiremock:
-    host: 127.0.0.1
-    port: 18080
+    bin_path: /my/path/to/phiremock
+    logs_path: /path/to/logs/dir
+    debug: false
+    expectations_path: /path/to/expectations/dir
+    startDelay: 1
