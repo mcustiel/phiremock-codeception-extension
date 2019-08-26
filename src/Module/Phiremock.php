@@ -20,6 +20,8 @@ namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
+use Codeception\Util\ExpectationAnnotationParser;
+use GuzzleHttp\Client;
 use Mcustiel\Phiremock\Client\Phiremock as PhiremockClient;
 use Mcustiel\Phiremock\Client\Utils\RequestBuilder;
 use Mcustiel\Phiremock\Domain\Expectation;
@@ -50,6 +52,21 @@ class Phiremock extends CodeceptionModule
     {
         if ($this->config['resetBeforeEachTest']) {
             $this->haveACleanSetupInRemoteService();
+        }
+        $expectations = (new ExpectationAnnotationParser())->getExpectations($test);
+        if(!empty($expectations)){
+            $client = new Client([
+                'base_uri' => "{$this->config['host']}:{$this->config['port']}",
+            ]);
+            foreach ($expectations as $expectation){
+
+                $client->post(PhiremockClient::API_EXPECTATIONS_URL, [
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ],
+                    'body'    => file_get_contents($expectation),
+                ]);
+            }
         }
         parent::_before($test);
     }
