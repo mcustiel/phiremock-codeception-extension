@@ -27,7 +27,7 @@ class ExpectationAnnotationParser
      */
     public function __construct($config = [])
     {
-        if(empty($config)){
+        if (empty($config)) {
             $config = Configuration::config();
         }
         $this->config = $config;
@@ -41,7 +41,7 @@ class ExpectationAnnotationParser
      */
     public function getExpectations(TestInterface $test)
     {
-        if(!$test instanceof Cest){
+        if (!$test instanceof Cest) {
             return [];
         }
         $expectations = Annotation::forMethod($test->getTestClass(), $test->getTestMethod())->fetchAll('expectation');
@@ -51,15 +51,14 @@ class ExpectationAnnotationParser
 
     /**
      * @param       $expectationsPath
-     * @param array $matches
      *
      * @return string
      */
-    function getExpectationFullPath($path)
+    protected function getExpectationFullPath($path)
     {
         $expectationsPath = isset($this->config['paths'][self::PATH_CONFIG_KEY]) ? $this->config['paths'][self::PATH_CONFIG_KEY] : self::DEFAULT_EXPECTATIONS_PATH;
 
-        return codecept_root_dir($expectationsPath . $path);
+        return codecept_root_dir($expectationsPath.$path);
     }
 
     /**
@@ -79,7 +78,7 @@ class ExpectationAnnotationParser
         }
 
         $expectationPath = $this->getExpectationFullPath("{$matches['filePath']}.json");
-        if(!file_exists($expectationPath)){
+        if (!file_exists($expectationPath)) {
             throw new ParseException("The expectation at $expectationPath could not be found ");
         }
 
