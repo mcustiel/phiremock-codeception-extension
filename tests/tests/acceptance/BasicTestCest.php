@@ -11,11 +11,11 @@ class BasicTestCest
 {
     public function _before(AcceptanceTester $I)
     {
-        $I->haveACleanSetupInRemoteService();
     }
 
     public function _after(AcceptanceTester $I)
     {
+        $I->haveACleanSetupInRemoteService();
     }
 
     // tests
@@ -126,5 +126,47 @@ class BasicTestCest
             $I->assertArrayHasKey($key, $headers);
             $I->assertSame($value, $headers[$key]);
         }
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     * @expectation("test_first_get")
+     */
+    public function testAnnotationExpectationIsLoaded(AcceptanceTester $I)
+    {
+        $requestBuilder = A::getRequest()->andUrl(Is::equalTo('/expectation/1'));
+        $response = file_get_contents('http://localhost:18080/expectation/1');
+
+        $requests = $I->grabRequestsMadeToRemoteService($requestBuilder);
+        $I->assertCount(1, $requests);
+
+        $I->assertEquals("response", $response);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     * @expectation("test_first_get")
+     * @expectation("test_second_get")
+     */
+    public function testMultipleAnnotationsAreLoaded(AcceptanceTester $I)
+    {
+        $requestBuilder = A::getRequest()->andUrl(Is::matching('/\\/expectation\\/\\d+/'));
+        file_get_contents('http://localhost:18080/expectation/1');
+        file_get_contents('http://localhost:18080/expectation/2');
+        $requests = $I->grabRequestsMadeToRemoteService($requestBuilder);
+        $I->assertCount(2, $requests);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     *
+     * @expectation test_first_get
+     * @expectation test_first_get.json
+     * @expectation(test_first_get.json)
+     * @expectation(test_first_get)
+     * @expectation("test_first_get")
+     */
+    public function testAnnotationFormats(AcceptanceTester $I)
+    {
     }
 }
