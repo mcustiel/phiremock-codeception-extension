@@ -93,7 +93,7 @@ class PhiremockProcess
         $commandline[] = $logFile;
         $commandline[] = '2>&1';
 
-        $this->process = new Process(implode(' ', $commandline));
+        $this->process = Process::fromShellCommandline(implode(' ', $commandline));
     }
 
     /**
