@@ -21,7 +21,7 @@ class ExpectationParserTestCest
 
     public function expectationNotFoundThrowsParseError(UnitTester $I)
     {
-        $I->expectException(ParseException::class,function(){
+        $I->expectException(ParseException::class, function () {
             $this->parser->parseExpectation("random.expectation");
         });
     }

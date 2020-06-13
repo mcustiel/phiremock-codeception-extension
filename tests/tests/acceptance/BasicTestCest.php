@@ -1,6 +1,5 @@
 <?php
 
-
 use Codeception\Configuration;
 use Mcustiel\Phiremock\Client\Phiremock;
 use Mcustiel\Phiremock\Client\Utils\A;
@@ -100,13 +99,13 @@ class BasicTestCest
             Phiremock::on($requestBuilder)->then(Respond::withStatusCode(200))
         );
 
-        $options = array(
-            'http' => array(
+        $options = [
+            'http' => [
                 'header'  => 'Content-Type: application/x-www-form-urlencoded',
                 'method'  => 'POST',
                 'content' => http_build_query(['a' => 'b'])
-            )
-        );
+            ]
+        ];
         file_get_contents('http://localhost:18080/some/url', false, stream_context_create($options));
 
         $requests = $I->grabRequestsMadeToRemoteService($requestBuilder);
@@ -118,7 +117,7 @@ class BasicTestCest
 
         $headers = (array) $first->headers;
         $expectedSubset = [
-            'Host' => ['localhost:18080'],
+            'Host'         => ['localhost:18080'],
             'Content-Type' => ['application/x-www-form-urlencoded']
         ];
 

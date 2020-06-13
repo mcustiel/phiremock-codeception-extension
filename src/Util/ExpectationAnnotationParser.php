@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Codeception\Util;
-
 
 use Codeception\Configuration;
 use Codeception\Exception\ParseException;
@@ -33,7 +31,6 @@ class ExpectationAnnotationParser
         $this->config = $config;
     }
 
-
     /**
      * @param TestInterface|Cest $test
      *
@@ -50,22 +47,10 @@ class ExpectationAnnotationParser
     }
 
     /**
-     * @param       $expectationsPath
-     *
-     * @return string
-     */
-    protected function getExpectationFullPath($path)
-    {
-        $expectationsPath = isset($this->config['paths'][self::PATH_CONFIG_KEY]) ? $this->config['paths'][self::PATH_CONFIG_KEY] : self::DEFAULT_EXPECTATIONS_PATH;
-
-        return codecept_root_dir($expectationsPath.$path);
-    }
-
-    /**
      * @param $expectation
      *
-     * @return string
      * @throws ParseException
+     * @return string
      */
     public function parseExpectation($expectation)
     {
@@ -83,5 +68,18 @@ class ExpectationAnnotationParser
         }
 
         return $expectationPath;
+    }
+
+    /**
+     * @param       $expectationsPath
+     * @param mixed $path
+     *
+     * @return string
+     */
+    protected function getExpectationFullPath($path)
+    {
+        $expectationsPath = isset($this->config['paths'][self::PATH_CONFIG_KEY]) ? $this->config['paths'][self::PATH_CONFIG_KEY] : self::DEFAULT_EXPECTATIONS_PATH;
+
+        return codecept_root_dir($expectationsPath . $path);
     }
 }

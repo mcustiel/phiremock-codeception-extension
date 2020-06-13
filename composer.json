@@ -28,7 +28,7 @@
     "license" : "GPL-3.0-or-later",
     "require" : {
         "php" : "^7.2",
-        "mcustiel/phiremock-client": "dev-master",
+        "mcustiel/phiremock-server": "dev-master",
         "codeception/codeception" : ">=2.2 <5.0",
         "symfony/process": ">=2.7.15 <6.0.0",
         "codeception/lib-asserts": "^1.1"

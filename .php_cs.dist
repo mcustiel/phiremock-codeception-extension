@@ -3,11 +3,26 @@
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
-        '@Symfony' => true,
-        '@Symfony:risky' => true,
-        'array_syntax' => ['syntax' => 'short'],
+    	// PSR-12
+	    '@PSR2' => true,
+	    'blank_line_after_opening_tag' => true,
+	    'braces' => ['allow_single_line_closure' => true],
+	    'compact_nullable_typehint' => true,
+	    'concat_space' => ['spacing' => 'one'],
+	    'declare_equal_normalize' => ['space' => 'none'],
+	    'function_typehint_space' => true,
+	    'new_with_braces' => true,
+	    'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
+	    'no_empty_statement' => true,
+	    'no_leading_import_slash' => true,
+	    'no_leading_namespace_whitespace' => true,
+	    'no_whitespace_in_blank_line' => true,
+	    'return_type_declaration' => ['space_before' => 'none'],
+	    'single_trait_insert_per_statement' => true,
+	    
+	    // Own extras
+	    'array_syntax' => ['syntax' => 'short'],
         'combine_consecutive_unsets' => true,
-        // one should use PHPUnit methods to set up expected exception instead of annotations
         'general_phpdoc_annotation_remove' => ['expectedException', 'expectedExceptionMessage', 'expectedExceptionMessageRegExp'],
         'heredoc_to_nowdoc' => true,
         'no_extra_consecutive_blank_lines' => ['break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block'],
@@ -23,12 +38,12 @@ return PhpCsFixer\Config::create()
         'psr4' => true,
         'strict_comparison' => true,
         'strict_param' => true,
-        'concat_space' => ['spacing' => 'one'],
         'binary_operator_spaces' => ['align_double_arrow' => true],
-    ])
+        'yoda_style' => ['equal' => false, 'identical' => false, 'less_and_greater' => false, 'always_move_variable' => true],
+        'is_null' => ['use_yoda_style' => false],
+	])
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->exclude('tests/Fixtures')
             ->in(__DIR__ . '/src')
             ->in(__DIR__ . '/tests')
     )

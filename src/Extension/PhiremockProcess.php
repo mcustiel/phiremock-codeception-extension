@@ -25,29 +25,12 @@ use Symfony\Component\Process\Process;
  */
 class PhiremockProcess
 {
-    /**
-     * Phiremock server log.
-     *
-     * @var string
-     */
     const LOG_FILE_NAME = 'phiremock.log';
 
-    /**
-     * @var \Symfony\Component\Process\Process
-     */
+    /** @var \Symfony\Component\Process\Process */
     private $process;
 
-    /**
-     * Starts Phiremock.
-     *
-     * @param string $ip
-     * @param int    $port
-     * @param string $path
-     * @param string $logsPath
-     * @param bool   $debug
-     * @param mixed  $expectationsPath
-     */
-    public function start($ip, $port, $path, $logsPath, $debug, $expectationsPath)
+    public function start(string $ip, int $port, string $path, string $logsPath, bool $debug, ?string $expectationsPath): void
     {
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
         $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
@@ -57,23 +40,12 @@ class PhiremockProcess
         $this->process->start();
     }
 
-    /**
-     * Stops the process.
-     */
-    public function stop()
+    public function stop(): void
     {
         $this->process->stop(3);
     }
 
-    /**
-     * @param string $ip
-     * @param int    $port
-     * @param bool   $debug
-     * @param string $expectationsPath
-     * @param string $phiremockPath
-     * @param string $logFile
-     */
-    private function initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile)
+    private function initProcess(string $ip, int $port, bool $debug, ?string $expectationsPath, string $phiremockPath, string $logFile): void
     {
         $commandline = [
             $this->getCommandPrefix() . $phiremockPath,
@@ -100,28 +72,19 @@ class PhiremockProcess
         }
     }
 
-    /**
-     * @param bool $debug
-     */
-    private function logPhiremockCommand($debug)
+    private function logPhiremockCommand(bool $debug): void
     {
         if ($debug) {
             echo 'Running ' . $this->process->getCommandLine() . PHP_EOL;
         }
     }
 
-    /**
-     * @return string
-     */
-    private function getCommandPrefix()
+    private function getCommandPrefix(): string
     {
         return $this->isWindows() ? '' : 'exec ';
     }
 
-    /**
-     * @return bool
-     */
-    private function isWindows()
+    private function isWindows(): bool
     {
         return DIRECTORY_SEPARATOR === '\\';
     }

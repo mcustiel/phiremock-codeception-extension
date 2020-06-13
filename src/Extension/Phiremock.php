@@ -26,26 +26,23 @@ use Codeception\Extension as CodeceptionExtension;
  */
 class Phiremock extends CodeceptionExtension
 {
-    /**
-     * @var array
-     */
+    private const DEFAULT_PATH = '/../vendor/bin/phiremock';
+    private const DEFAULT_PORT = 8086;
+
+    /** @var array */
     public static $events = [
         'suite.before' => 'startProcess',
         'suite.after'  => 'stopProcess',
     ];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $config = [
-        'listen'     => '0.0.0.0:8086',
+        'listen'     => '0.0.0.0:' . self::DEFAULT_PORT,
         'debug'      => false,
         'startDelay' => 0,
     ];
 
-    /**
-     * @var PhiremockProcess
-     */
+    /** @var PhiremockProcess */
     private $process;
 
     /**
@@ -60,22 +57,19 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcess $process = null
     ) {
-        $this->config['bin_path'] = Config::projectDir() . '../vendor/bin/phiremock';
-        $this->config['logs_path'] = Config::logDir();
-        $this->config['expectations_path'] = null;
-
+        $this->setDefaults();
         parent::__construct($config, $options);
 
         $this->initProcess($process);
     }
 
-    public function startProcess()
+    public function startProcess(): void
     {
         list($ip, $port) = explode(':', $this->config['listen']);
 
         $this->process->start(
             $ip,
-            $port,
+            empty($port) ? self::DEFAULT_PORT: (int) $port,
             $this->getBinPath($this->config['bin_path']),
             realpath($this->config['logs_path']),
             $this->config['debug'],
@@ -84,27 +78,31 @@ class Phiremock extends CodeceptionExtension
         $this->executeDelay();
     }
 
-    public function stopProcess()
+    public function stopProcess(): void
     {
         $this->process->stop();
     }
 
-    private function executeDelay()
+    private function executeDelay(): void
     {
         if ($this->config['startDelay']) {
             sleep($this->config['startDelay']);
         }
     }
 
-    /**
-     * @param PhiremockProcess|null $process
-     */
-    private function initProcess($process)
+    private function initProcess(?PhiremockProcess $process): PhiremockProcess
     {
-        $this->process = null === $process ? new PhiremockProcess() : $process;
+        $this->process = $process ?? new PhiremockProcess();
     }
 
-    private function getBinPath($path)
+    private function setDefaults(): void
+    {
+        $this->config['bin_path'] = rtrim(Config::projectDir(), DIRECTORY_SEPARATOR) . '../vendor/bin/phiremock';
+        $this->config['logs_path'] = Config::logDir();
+        $this->config['expectations_path'] = null;
+    }
+
+    private function getBinPath($path): string
     {
         $currentDirectory = getcwd();
         chdir(Config::projectDir());
