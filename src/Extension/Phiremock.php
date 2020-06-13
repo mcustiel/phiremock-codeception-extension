@@ -79,7 +79,7 @@ class Phiremock extends CodeceptionExtension
             $this->getBinPath($this->config['bin_path']),
             realpath($this->config['logs_path']),
             $this->config['debug'],
-            $this->config['expectations_path'] ? realpath($this->config['expectations_path']) : null
+            $this->config['expectations_path'] ?: null
         );
         $this->executeDelay();
     }
