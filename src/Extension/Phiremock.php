@@ -97,7 +97,7 @@ class Phiremock extends CodeceptionExtension
 
     private function setDefaults(): void
     {
-        $this->config['bin_path'] = rtrim(Config::projectDir(), DIRECTORY_SEPARATOR) . '../vendor/bin/phiremock';
+        $this->config['bin_path'] = rtrim(Config::projectDir(), DIRECTORY_SEPARATOR) . self::DEFAULT_PATH;
         $this->config['logs_path'] = Config::logDir();
         $this->config['expectations_path'] = null;
     }
