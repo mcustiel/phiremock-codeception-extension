@@ -42,7 +42,8 @@ extensions:
             logs_path: /var/log/my_app/tests/logs # defaults to codeception's tests output dir
             debug: true # defaults to false
             startDelay: 1 # default to 0
-            expectations_path: /my/expectations/path
+            expectations_path: /my/expectations/path # defaults to tests/_expectations
+            unique_expectations_path: /my/expectations/path # defaults to tests/_unique_expectations
 ```
 Note: Since Codeception version 2.2.7, extensions configuration can be added directly in the suite configuration file. That will avoid phiremock to be started for every suite. 
 
@@ -60,6 +61,7 @@ $loader = require APP_ROOT . '/vendor/autoload.php';
 * **debug:** Where to write debug data to log files
 * **startDelay:** Time to wait after Phiremock was started to start running the tests (used to give time to Phiremock to boot) 
 * **expectations_path:** Specifies a directory to search for json files defining expectations to load by default.
+* **unique_expectations_path:** Specifies a directory to search for json files defining expectations to load via annotations.
 
 ### Module
 The module allows you to connect to a Phiremock server and to interact with it in a semantic way through the codeception actor in your tests.
@@ -132,6 +134,32 @@ Retrieves all the requests received by Phiremock server matching the one specifi
 
 ```php
     $I->grabRequestsMadeToRemoteService(A::getRequest()->andUrl(Is::equalTo('/some/url')));
+```
+
+#### @expectation Annotations
+
+Allows you to to set up an expectation via a json file 
+
+```php
+    /**
+     * @expectation("get_client_timeout")
+     */
+    public function test(FunctionalTester $I)
+    {
+        ...
+    }
+```
+
+That will load by default the file at `tests/_unique_expectations/get_client_timeout.json`
+
+Multiple annotation formats are accepted
+
+```
+     * @expectation get_client_timeout
+     * @expectation get_client_timeout.json
+     * @expectation(get_client_timeout.json)
+     * @expectation(get_client_timeout)
+     * @expectation("get_client_timeout")
 ```
 
 ## Use case
