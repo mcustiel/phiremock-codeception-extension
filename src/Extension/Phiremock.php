@@ -37,9 +37,11 @@ class Phiremock extends CodeceptionExtension
 
     /** @var array */
     protected $config = [
-        'listen'      => '0.0.0.0:' . self::DEFAULT_PORT,
-        'debug'       => false,
-        'start_delay' => 0,
+        'listen'            => '0.0.0.0:' . self::DEFAULT_PORT,
+        'debug'             => false,
+        'start_delay'       => 0,
+        'bin_path'          => self::DEFAULT_PATH,
+        'expectations_path' => null,
     ];
 
     /** @var PhiremockProcess */
@@ -57,7 +59,7 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcess $process = null
     ) {
-        $this->setDefaults();
+        $this->setDefaultLogsPath();
         parent::__construct($config, $options);
 
         $this->initProcess($process);
@@ -102,11 +104,9 @@ class Phiremock extends CodeceptionExtension
         $this->process = $process ?? new PhiremockProcess();
     }
 
-    private function setDefaults(): void
+    private function setDefaultLogsPath(): void
     {
-        $this->config['bin_path'] = self::DEFAULT_PATH;
         $this->config['logs_path'] = Config::logDir();
-        $this->config['expectations_path'] = null;
     }
 
     private function getPathFromCodeceptionDir($path): string
