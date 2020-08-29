@@ -68,7 +68,7 @@ class PhiremockProcess
         if (method_exists(Process::class, 'fromShellCommandline')) {
             $this->process = Process::fromShellCommandline(implode(' ', $commandline));
         } else {
-            $this->process = new Process(implode(' ', $commandline));
+            $this->process = new Process($commandline);
         }
     }
 
