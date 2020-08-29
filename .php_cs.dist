@@ -2,7 +2,8 @@
 
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
-    ->setRules([
+    ->setRules(
+    [
     	// PSR-12
 	    '@PSR2' => true,
 	    'blank_line_after_opening_tag' => true,
@@ -44,6 +45,7 @@ return PhpCsFixer\Config::create()
 	])
     ->setFinder(
         PhpCsFixer\Finder::create()
+            ->exclude('tests/Fixtures')
             ->in(__DIR__ . '/src')
             ->in(__DIR__ . '/tests')
     )
