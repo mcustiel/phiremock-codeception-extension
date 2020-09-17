@@ -42,6 +42,7 @@ class Phiremock extends CodeceptionExtension
         'start_delay'       => 0,
         'bin_path'          => self::DEFAULT_PATH,
         'expectations_path' => null,
+        'server_factory'    => 'default'
     ];
 
     /** @var PhiremockProcess */
@@ -76,7 +77,8 @@ class Phiremock extends CodeceptionExtension
             $this->getPathFromCodeceptionDir($this->config['bin_path']),
             $this->getPathFromCodeceptionDir($this->config['logs_path']),
             $this->config['debug'],
-            $this->config['expectations_path'] ? $this->getPathFromCodeceptionDir($this->config['expectations_path']) : null
+            $this->config['expectations_path'] ? $this->getPathFromCodeceptionDir($this->config['expectations_path']) : null,
+            $this->getFactoryClass()
         );
         $this->executeDelay();
     }
@@ -85,6 +87,17 @@ class Phiremock extends CodeceptionExtension
     {
         $this->writeln('Stopping phiremock...');
         $this->process->stop();
+    }
+
+    private function getFactoryClass(): ?string
+    {
+        if (isset($this->config['server_factory'])) {
+            $factoryClassConfig = $this->config['server_factory'];
+            if ($factoryClassConfig !== 'default') {
+                return $this->config['server_factory'];
+            }
+        }
+        return null;
     }
 
     private function executeDelay(): void

@@ -16,6 +16,7 @@ extensions:
     config:
         \Codeception\Extension\Phiremock:
             listen: 0.0.0.0:18080
-            startDelay: 1
+            start_delay: 1
             debug: true
-            expectations-path:
+            expectations_path:
+            server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7 

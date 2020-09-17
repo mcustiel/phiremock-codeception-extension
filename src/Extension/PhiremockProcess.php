@@ -30,12 +30,19 @@ class PhiremockProcess
     /** @var \Symfony\Component\Process\Process */
     private $process;
 
-    public function start(string $ip, int $port, string $path, string $logsPath, bool $debug, ?string $expectationsPath): void
-    {
+    public function start(
+        string $ip,
+        int $port,
+        string $path,
+        string $logsPath,
+        bool $debug,
+        ?string $expectationsPath,
+        ?string $factoryClass
+    ): void {
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
         $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
-        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile);
+        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile, $factoryClass);
         $this->logPhiremockCommand($debug);
         $this->process->start();
     }
@@ -45,8 +52,15 @@ class PhiremockProcess
         $this->process->stop(3);
     }
 
-    private function initProcess(string $ip, int $port, bool $debug, ?string $expectationsPath, string $phiremockPath, string $logFile): void
-    {
+    private function initProcess(
+        string $ip,
+        int $port,
+        bool $debug,
+        ?string $expectationsPath,
+        string $phiremockPath,
+        string $logFile,
+        ?string $factoryClass
+    ): void {
         $commandline = [
             $this->getCommandPrefix() . $phiremockPath,
             '-i',
@@ -60,6 +74,10 @@ class PhiremockProcess
         if ($expectationsPath) {
             $commandline[] = '-e';
             $commandline[] = $expectationsPath;
+        }
+        if ($factoryClass) {
+            $commandline[] = '-f';
+            $commandline[] = escapeshellarg($factoryClass);
         }
         $commandline[] = '>';
         $commandline[] = $logFile;
