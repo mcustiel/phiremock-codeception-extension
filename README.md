@@ -6,7 +6,7 @@ Codeception extension to make working with [Phiremock Server](https://github.com
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mcustiel/phiremock-codeception-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mcustiel/phiremock-codeception-extension/?branch=master)
 [![Monthly Downloads](https://poser.pugx.org/mcustiel/phiremock-codeception-extension/d/monthly)](https://packagist.org/packages/mcustiel/phiremock-codeception-extension)
 
-# Installation
+## Installation
 
 ### Composer:
 
@@ -24,6 +24,8 @@ Optionally, you can install Phiremock Server in case you want to have it between
     "mcustiel/phiremock-server": "^1.0",
     "guzzlehttp/guzzle": "^6.0"
 ```
+
+Phiremock server has been made an optional dependency in case you want to run it from a phar file, a global composer dependency or in a docker container, and not have it as a project dependency.
 
 ## Configuration
 
