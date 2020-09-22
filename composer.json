@@ -43,8 +43,8 @@
         "guzzlehttp/guzzle" : "^7.0"
     },
     "suggests": {
-        "mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin"
+        "mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin",
+        "guzzlehttp/guzzle" : "Version 6 to execute phiremock-server as default"
     },
-    "prefer-stable": true,
-    "minimum-stability": "dev"
+    "prefer-stable": true
 }
