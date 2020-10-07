@@ -25,6 +25,7 @@ use GuzzleHttp\Client;
 use Mcustiel\Phiremock\Client\Phiremock as PhiremockClient;
 use Mcustiel\Phiremock\Client\Utils\RequestBuilder;
 use Mcustiel\Phiremock\Domain\Expectation;
+use Mcustiel\Phiremock\Domain\ScenarioState;
 
 class Phiremock extends CodeceptionModule
 {
@@ -121,5 +122,11 @@ class Phiremock extends CodeceptionModule
     public function grabRequestsMadeToRemoteService(RequestBuilder $builder)
     {
         return $this->phiremock->listExecutions($builder);
+    }
+
+    public function setScenarioState(string $name, string $state): void
+    {
+        $scenarioState = new ScenarioState($name, $state);
+        $this->phiremock->setScenarioState($scenarioState);
     }
 }
