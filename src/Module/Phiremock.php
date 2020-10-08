@@ -124,7 +124,11 @@ class Phiremock extends CodeceptionModule
         return $this->phiremock->listExecutions($builder);
     }
 
-    public function setScenarioState(string $name, string $state): void
+    /**
+     * @param string $name
+     * @param string $state
+     */
+    public function setScenarioState($name, $state)
     {
         $scenarioState = new ScenarioState($name, $state);
         $this->phiremock->setScenarioState($scenarioState);
