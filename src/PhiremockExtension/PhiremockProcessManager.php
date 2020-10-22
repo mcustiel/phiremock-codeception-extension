@@ -16,19 +16,24 @@
  * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Codeception\Extension;
+namespace Mcustiel\Phiremock\Codeception\Extension;
 
 use Symfony\Component\Process\Process;
 
 /**
  * Manages the current running Phiremock process.
  */
-class PhiremockProcess
+class PhiremockProcessManager
 {
     const LOG_FILE_NAME = 'phiremock.log';
 
-    /** @var \Symfony\Component\Process\Process */
-    private $process;
+    /** @var \Symfony\Component\Process\Process[] */
+    private $processes;
+
+    public function __construct()
+    {
+        $this->processes = [];
+    }
 
     public function start(
         string $ip,
@@ -42,14 +47,18 @@ class PhiremockProcess
         $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
         $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
         $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
-        $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile, $factoryClass);
-        $this->logPhiremockCommand($debug);
-        $this->process->start();
+        $process = $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile, $factoryClass);
+        $this->logPhiremockCommand($debug, $process);
+        $process->start();
+        $this->processes[$process->getPid()] = $process;
     }
 
     public function stop(): void
     {
-        $this->process->stop(3);
+        foreach ($this->processes as $pid => $process) {
+            echo "Stopping phiremock process with pid: " . $pid . PHP_EOL;
+            $process->stop(3);
+        }
     }
 
     private function initProcess(
@@ -60,7 +69,7 @@ class PhiremockProcess
         string $phiremockPath,
         string $logFile,
         ?string $factoryClass
-    ): void {
+    ): Process {
         $commandline = [
             $this->getCommandPrefix() . $phiremockPath,
             '-i',
@@ -84,16 +93,15 @@ class PhiremockProcess
         $commandline[] = '2>&1';
 
         if (method_exists(Process::class, 'fromShellCommandline')) {
-            $this->process = Process::fromShellCommandline(implode(' ', $commandline));
-        } else {
-            $this->process = new Process(implode(' ', $commandline));
+            return Process::fromShellCommandline(implode(' ', $commandline));
         }
+        return new Process(implode(' ', $commandline));
     }
 
-    private function logPhiremockCommand(bool $debug): void
+    private function logPhiremockCommand(bool $debug, Process $process): void
     {
         if ($debug) {
-            echo 'Running ' . $this->process->getCommandLine() . PHP_EOL;
+            echo 'Running ' . $process->getCommandLine() . PHP_EOL;
         }
     }
 

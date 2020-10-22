@@ -6,17 +6,20 @@ paths:
     support: tests/_support
     envs: tests/_envs
 settings:
-    bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
+bootstrap: _bootstrap.php
 extensions:
     enabled:
         - \Codeception\Extension\RunFailed
         - \Codeception\Extension\Phiremock
     config:
         \Codeception\Extension\Phiremock:
-            listen: 0.0.0.0:18080
-            start_delay: 1
             debug: true
-            expectations_path:
-            server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7 
+            start_delay: 1
+            extra_instances:
+              -
+                listen: 0.0.0.0:18080
+                debug: true
+                expectations_path:
+                server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7 
