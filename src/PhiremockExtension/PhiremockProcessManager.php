@@ -35,20 +35,10 @@ class PhiremockProcessManager
         $this->processes = [];
     }
 
-    public function start(
-        string $ip,
-        int $port,
-        string $path,
-        string $logsPath,
-        bool $debug,
-        ?string $expectationsPath,
-        ?string $factoryClass
-    ): void {
-        $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
-        $expectationsPath = is_dir($expectationsPath) ? $expectationsPath : '';
-        $logFile = $logsPath . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME;
-        $process = $this->initProcess($ip, $port, $debug, $expectationsPath, $phiremockPath, $logFile, $factoryClass);
-        $this->logPhiremockCommand($debug, $process);
+    public function start(Config $config): void
+    {
+        $process = $this->initProcess($config);
+        $this->logPhiremockCommand($config->isDebugMode(), $process);
         $process->start();
         $this->processes[$process->getPid()] = $process;
     }
@@ -62,32 +52,45 @@ class PhiremockProcessManager
     }
 
     private function initProcess(
-        string $ip,
-        int $port,
-        bool $debug,
-        ?string $expectationsPath,
-        string $phiremockPath,
-        string $logFile,
-        ?string $factoryClass
+        Config $config
     ): Process {
+        $path = $config->getPhiremockPath();
+        $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
+        $path = $config->getExpectationsPath();
+        $expectationsPath = is_dir($path) ? $path : '';
+        $path = $config->getLogsPath();
+        $logFile = is_dir($path) ? $path . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME : $path;
+
         $commandline = [
             $this->getCommandPrefix() . $phiremockPath,
             '-i',
-            $ip,
+            $config->getInterface(),
             '-p',
-            $port,
+            $config->getPort(),
         ];
-        if ($debug) {
+        if ($config->isDebugMode()) {
             $commandline[] = '-d';
         }
         if ($expectationsPath) {
             $commandline[] = '-e';
             $commandline[] = $expectationsPath;
         }
-        if ($factoryClass) {
+        if ($config->getServerFactory()) {
             $commandline[] = '-f';
-            $commandline[] = escapeshellarg($factoryClass);
+            $commandline[] = escapeshellarg($config->getServerFactory());
         }
+
+        if ($config->getCertificatePath()) {
+            $commandline[] = '-t';
+            $commandline[] = $config->getCertificatePath();
+            $commandline[] = '-k';
+            $commandline[] = $config->getCertificateKeyPath();
+            if ($config->getCertificatePassphrase()) {
+                $commandline[] = '-s';
+                $commandline[] = $config->getCertificatePassphrase();
+            }
+        }
+
         $commandline[] = '>';
         $commandline[] = $logFile;
         $commandline[] = '2>&1';

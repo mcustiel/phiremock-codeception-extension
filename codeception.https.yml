@@ -15,12 +15,17 @@ extensions:
         - \Codeception\Extension\Phiremock
     config:
         \Codeception\Extension\Phiremock:
+            listen: 0.0.0.0:18080
+            expectations_path:
+            server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7
+            logs_path: tests/_output/phiremock.extra.log 
             debug: true
             start_delay: 1
             extra_instances:
               -
-                listen: 0.0.0.0:18080
+                listen: 0.0.0.0:18443
                 debug: true
                 expectations_path:
-                server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7
-                logs_path: tests/_output/phiremock.extra.log 
+                certificate: tests/_data/certificate-cert.pem
+                certificate_key:  tests/_data/certificate-key.key
+                logs_path: tests/_output/phiremock.secure.log

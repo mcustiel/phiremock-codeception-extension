@@ -38,7 +38,7 @@
         "symfony/process": ">=3.0.0 <6.0.0"
     },
     "require-dev": {
-        "mcustiel/phiremock-server": "^1.0",
+        "mcustiel/phiremock-server": "dev-feature/secure",
     	"codeception/module-rest": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "guzzlehttp/guzzle" : "^7.0"

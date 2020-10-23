@@ -53,26 +53,10 @@ class Phiremock extends CodeceptionExtension
     public function startProcess(): void
     {
         $this->writeln('Starting default phiremock instance...');
-        $this->process->start(
-            $this->extensionConfig->getInterface(),
-            $this->extensionConfig->getPort(),
-            $this->extensionConfig->getPhiremockPath(),
-            $this->extensionConfig->getLogsPath(),
-            $this->extensionConfig->isDebugMode(),
-            $this->extensionConfig->getExpectationsPath(),
-            $this->extensionConfig->getServerFactory()
-        );
+        $this->process->start($this->extensionConfig);
         foreach ($this->extensionConfig->getExtraInstances() as $configInstance) {
             $this->writeln('Starting extra phiremock instance...');
-            $this->process->start(
-                $configInstance->getInterface(),
-                $configInstance->getPort(),
-                $configInstance->getPhiremockPath(),
-                $configInstance->getLogsPath(),
-                $configInstance->isDebugMode(),
-                $configInstance->getExpectationsPath(),
-                $configInstance->getServerFactory()
-            );
+            $this->process->start($configInstance);
         }
         $this->executeDelay();
     }

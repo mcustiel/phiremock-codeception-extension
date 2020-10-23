@@ -12,6 +12,9 @@ class Config
     public const DEFAULT_DELAY = 0;
     public const DEFAULT_DEBUG_MODE = false;
     public const DEFAULT_EXPECTATIONS_PATH = null;
+    public const DEFAULT_CERTIFICATE = null;
+    public const DEFAULT_CERTIFICATE_KEY = null;
+    public const DEFAULT_CERTIFICATE_PASSPHRASE = null;
     public const DEFAULT_SERVER_FACTORY = 'default';
     public const DEFAULT_EXTRA_INSTANCES = [];
 
@@ -22,6 +25,9 @@ class Config
         'bin_path'          => self::DEFAULT_PHIREMOCK_PATH,
         'expectations_path' => self::DEFAULT_EXPECTATIONS_PATH,
         'server_factory'    => self::DEFAULT_SERVER_FACTORY,
+        'certificate'       => self::DEFAULT_CERTIFICATE,
+        'certificate_key'   => self::DEFAULT_CERTIFICATE_KEY,
+        'cert_passphrase'   => self::DEFAULT_CERTIFICATE_PASSPHRASE,
         'extra_instances'   => self::DEFAULT_EXTRA_INSTANCES,
     ];
 
@@ -41,6 +47,12 @@ class Config
     private $logsPath;
     /** @var string */
     private $serverFactory;
+    /** @var Path */
+    private $certificate;
+    /** @var Path */
+    private $certificateKey;
+    /** @var string */
+    private $certificatePassphrase;
     /** @var array */
     private $extraInstances;
 
@@ -53,6 +65,9 @@ class Config
         $this->phiremockPath = new Path($config['bin_path']);
         $this->logsPath = new Path($config['logs_path']);
         $this->debug = (bool) $config['debug'];
+        $this->initCertificatePath($config);
+        $this->initCertificateKeyPath($config);
+        $this->certificatePassphrase = $config['cert_passphrase'];
         $this->initExtraInstances($config);
     }
 
@@ -84,6 +99,21 @@ class Config
     public function getExpectationsPath(): ?string
     {
         return $this->expectationsPath ? $this->expectationsPath->absoluteOrRelativeToCodeceptionDir() : null;
+    }
+
+    public function getCertificatePath(): ?string
+    {
+        return $this->certificate ? $this->certificate->absoluteOrRelativeToCodeceptionDir() : null;
+    }
+
+    public function getCertificateKeyPath(): ?string
+    {
+        return $this->certificateKey ? $this->certificateKey->absoluteOrRelativeToCodeceptionDir() : null;
+    }
+
+    public function getCertificatePassphrase(): ?string
+    {
+        return $this->certificatePassphrase;
     }
 
     public function getLogsPath(): string
@@ -159,5 +189,15 @@ class Config
                 $this->extraInstances[] = new self($instanceConfig);
             }
         }
+    }
+
+    private function initCertificateKeyPath($config)
+    {
+        $this->certificateKey = $config['certificate_key'] ? new Path($config['certificate_key']) : null;
+    }
+
+    private function initCertificatePath($config)
+    {
+        $this->certificate = $config['certificate'] ? new Path($config['certificate']) : null;
     }
 }
