@@ -116,5 +116,5 @@ and in the extension config provide the fully qualified namespace to that class:
 
 ## See also:
 
-Phiremock Server: https://github.com/mcustiel/phiremock-server
-Phiremock Codeception Module: https://github.com/mcustiel/phiremock-codeception-module
+* Phiremock Server: https://github.com/mcustiel/phiremock-server
+* Phiremock Codeception Module: https://github.com/mcustiel/phiremock-codeception-module
