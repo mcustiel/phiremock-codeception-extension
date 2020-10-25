@@ -58,6 +58,7 @@ class Config
 
     public function __construct(array $config)
     {
+        $this->setDefaults();
         $this->initInterfaceAndPort($config);
         $this->initExpectationsPath($config);
         $this->initServerFactory($config);
@@ -191,13 +192,26 @@ class Config
         }
     }
 
-    private function initCertificateKeyPath($config)
+    private function initCertificateKeyPath($config): void
     {
         $this->certificateKey = $config['certificate_key'] ? new Path($config['certificate_key']) : null;
     }
 
-    private function initCertificatePath($config)
+    private function initCertificatePath($config): void
     {
         $this->certificate = $config['certificate'] ? new Path($config['certificate']) : null;
+    }
+
+    private function setDefaults(): void
+    {
+        $this->extraInstances = self::DEFAULT_EXTRA_INSTANCES;
+        $this->delay = self::DEFAULT_DELAY;
+        $this->debug = self::DEFAULT_DEBUG_MODE;
+        $this->certificate = self::DEFAULT_CERTIFICATE;
+        $this->certificateKey = self::DEFAULT_CERTIFICATE_KEY;
+        $this->certificatePassphrase = self::DEFAULT_CERTIFICATE_PASSPHRASE;
+        $this->logs = self::getDefaultLogsPath();
+        $this->serverFactory = self::DEFAULT_SERVER_FACTORY;
+        $this->phiremockPath = self::DEFAULT_PHIREMOCK_PATH;
     }
 }
