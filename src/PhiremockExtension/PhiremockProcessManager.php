@@ -25,21 +25,23 @@ use Symfony\Component\Process\Process;
  */
 class PhiremockProcessManager
 {
-    const LOG_FILE_NAME = 'phiremock.log';
-
     /** @var \Symfony\Component\Process\Process[] */
     private $processes;
 
-    public function __construct()
+    /** @var callable */
+    private $output;
+
+    public function __construct(callable $output)
     {
         $this->processes = [];
+        $this->output = $output;
     }
 
     public function start(Config $config): void
     {
         $commandBuilder = new CommandBuilder($config);
         $process = $this->initProcess($commandBuilder);
-        $this->logPhiremockCommand($config->isDebugMode(), $process);
+        call_user_func($this->output, 'Running ' . $process->getCommandLine());
         $process->start();
         $this->processes[$process->getPid()] = $process;
     }
@@ -47,7 +49,7 @@ class PhiremockProcessManager
     public function stop(): void
     {
         foreach ($this->processes as $pid => $process) {
-            echo "Stopping phiremock process with pid: " . $pid . PHP_EOL;
+            call_user_func($this->output, "Stopping phiremock process with pid: " . $pid);
             $process->stop(3);
         }
     }
@@ -60,12 +62,5 @@ class PhiremockProcessManager
             return Process::fromShellCommandline(implode(' ', $commandline));
         }
         return new Process(implode(' ', $commandline));
-    }
-
-    private function logPhiremockCommand(bool $debug, Process $process): void
-    {
-        if ($debug) {
-            echo 'Running ' . $process->getCommandLine() . PHP_EOL;
-        }
     }
 }

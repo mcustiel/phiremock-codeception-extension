@@ -59,13 +59,16 @@ class Config
     private $extraInstances;
     /** @var string[] */
     private $suites;
+    /** @var callable */
+    private $output;
 
-    public function __construct(array $config)
+    public function __construct(array $config, callable $output)
     {
+        $this->output = $output;
         $this->initInterfaceAndPort($config);
         $this->initExpectationsPath($config);
         $this->initServerFactory($config);
-        $this->delay = (int) $config['start_delay'];
+        $this->initDelay($config);
         $this->phiremockPath = new Path($config['bin_path']);
         $this->logsPath = new Path($config['logs_path']);
         $this->debug = (bool) $config['debug'];
@@ -156,7 +159,7 @@ class Config
         if (isset($config['listen'])) {
             $parts = explode(':', $config['listen']);
             $this->interface = $parts[0];
-            $this->port = (int) isset($parts[1]) ? $parts[1] : self::DEFAULT_PORT;
+            $this->port = (int) (isset($parts[1]) ? $parts[1] : self::DEFAULT_PORT);
         }
     }
 
@@ -180,13 +183,13 @@ class Config
     private function initDelay(array $config): void
     {
         if (isset($config['startDelay'])) {
-            $this->writeln('PHIREMOCK/DEPRECATION: startDelay option is deprecated and will be removed. Please use start_delay');
-            $this->delay = $config['startDelay'];
+            call_user_func($this->output, 'PHIREMOCK/DEPRECATION: startDelay option is deprecated and will be removed. Please use start_delay');
+            $this->delay = (int) $config['startDelay'];
             return;
         }
 
         if ($config['start_delay']) {
-            $this->delay = $config['start_delay'];
+            $this->delay = (int) $config['start_delay'];
         }
     }
 
@@ -197,7 +200,7 @@ class Config
             foreach ($config['extra_instances'] as $extraInstance) {
                 $instanceConfig = $extraInstance + self::DEFAULT_CONFIG + ['logs_path' => Config::getDefaultLogsPath()];
                 unset($instanceConfig['extra_instances']);
-                $this->extraInstances[] = new self($instanceConfig);
+                $this->extraInstances[] = new self($instanceConfig, $this->output);
             }
         }
     }

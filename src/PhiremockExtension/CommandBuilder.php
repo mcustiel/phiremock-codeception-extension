@@ -4,6 +4,8 @@ namespace Mcustiel\Phiremock\Codeception\Extension;
 
 class CommandBuilder
 {
+    private const LOG_FILE_NAME = 'phiremock.log';
+
     /** @var Config */
     private $config;
 

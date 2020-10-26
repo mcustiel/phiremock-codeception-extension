@@ -49,7 +49,7 @@ class Phiremock extends CodeceptionExtension
     ) {
         $this->setDefaultLogsPath();
         parent::__construct($config, $options);
-        $this->extensionConfig = new Config($this->config);
+        $this->extensionConfig = new Config($this->config, $this->getOutputCallable());
         $this->initProcess($process);
     }
 
@@ -75,6 +75,13 @@ class Phiremock extends CodeceptionExtension
         $this->process->stop();
     }
 
+    public function getOutputCallable(): callable
+    {
+        return function (string $message) {
+            $this->writeln($message);
+        };
+    }
+
     private function mustRunForSuite(Suite $suite, array $allowedSuites): bool
     {
         return empty($allowedSuites) || in_array($suite->getBaseName(), $allowedSuites, true);
@@ -90,11 +97,13 @@ class Phiremock extends CodeceptionExtension
 
     private function initProcess(?PhiremockProcessManager $process): void
     {
-        $this->process = $process ?? new PhiremockProcessManager();
+        $this->process = $process ?? new PhiremockProcessManager($this->getOutputCallable());
     }
 
     private function setDefaultLogsPath(): void
     {
-        $this->config['logs_path'] = Config::getDefaultLogsPath();
+        if (!isset($this->config['logs_path'])) {
+            $this->config['logs_path'] = Config::getDefaultLogsPath();
+        }
     }
 }
