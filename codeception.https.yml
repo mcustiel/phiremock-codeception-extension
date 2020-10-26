@@ -29,3 +29,5 @@ extensions:
                 certificate: tests/_data/certificate-cert.pem
                 certificate_key:  tests/_data/certificate-key.key
                 logs_path: tests/_output/phiremock.secure.log
+                suites: 
+                  - acceptance
