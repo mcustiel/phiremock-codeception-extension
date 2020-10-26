@@ -53,7 +53,7 @@ class Phiremock extends CodeceptionExtension
         $this->initProcess($process);
     }
 
-    public function startProcess(SuiteEvent $event, string $eventName, EventDispatcher $eventDispatcher): void
+    public function startProcess(SuiteEvent $event): void
     {
         $this->writeln('Starting default phiremock instance...');
         $suite = $event->getSuite();
