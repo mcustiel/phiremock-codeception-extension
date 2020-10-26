@@ -18,9 +18,12 @@
 
 namespace Codeception\Extension;
 
+use Codeception\Event\SuiteEvent;
 use Codeception\Extension as CodeceptionExtension;
+use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Phiremock extends CodeceptionExtension
 {
@@ -50,13 +53,18 @@ class Phiremock extends CodeceptionExtension
         $this->initProcess($process);
     }
 
-    public function startProcess(): void
+    public function startProcess(SuiteEvent $event, string $eventName, EventDispatcher $eventDispatcher): void
     {
         $this->writeln('Starting default phiremock instance...');
-        $this->process->start($this->extensionConfig);
+        $suite = $event->getSuite();
+        if ($this->mustRunForSuite($suite, $this->extensionConfig->getSuites())) {
+            $this->process->start($this->extensionConfig);
+        }
         foreach ($this->extensionConfig->getExtraInstances() as $configInstance) {
-            $this->writeln('Starting extra phiremock instance...');
-            $this->process->start($configInstance);
+            if ($this->mustRunForSuite($suite, $configInstance->getSuites())) {
+                $this->writeln('Starting extra phiremock instance...');
+                $this->process->start($configInstance);
+            }
         }
         $this->executeDelay();
     }
@@ -65,6 +73,11 @@ class Phiremock extends CodeceptionExtension
     {
         $this->writeln('Stopping phiremock...');
         $this->process->stop();
+    }
+
+    private function mustRunForSuite(Suite $suite, array $allowedSuites): bool
+    {
+        return empty($allowedSuites) || in_array($suite->getBaseName(), $allowedSuites, true);
     }
 
     private function executeDelay(): void

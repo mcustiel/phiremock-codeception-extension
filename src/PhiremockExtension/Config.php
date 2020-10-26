@@ -17,6 +17,7 @@ class Config
     public const DEFAULT_CERTIFICATE_PASSPHRASE = null;
     public const DEFAULT_SERVER_FACTORY = 'default';
     public const DEFAULT_EXTRA_INSTANCES = [];
+    public const DEFAULT_SUITES = [];
 
     public const DEFAULT_CONFIG = [
         'listen'            => self::DEFAULT_INTERFACE . ':' . self::DEFAULT_PORT,
@@ -29,6 +30,7 @@ class Config
         'certificate_key'   => self::DEFAULT_CERTIFICATE_KEY,
         'cert_passphrase'   => self::DEFAULT_CERTIFICATE_PASSPHRASE,
         'extra_instances'   => self::DEFAULT_EXTRA_INSTANCES,
+        'suites'            => self::DEFAULT_SUITES,
     ];
 
     /** @var string */
@@ -53,12 +55,13 @@ class Config
     private $certificateKey;
     /** @var string */
     private $certificatePassphrase;
-    /** @var array */
+    /** @var Config[] */
     private $extraInstances;
+    /** @var string[] */
+    private $suites;
 
     public function __construct(array $config)
     {
-        $this->setDefaults();
         $this->initInterfaceAndPort($config);
         $this->initExpectationsPath($config);
         $this->initServerFactory($config);
@@ -70,6 +73,12 @@ class Config
         $this->initCertificateKeyPath($config);
         $this->certificatePassphrase = $config['cert_passphrase'];
         $this->initExtraInstances($config);
+        $this->suites = $config['suites'];
+    }
+
+    public function getSuites(): array
+    {
+        return $this->suites;
     }
 
     public function getInterface(): string
@@ -183,6 +192,7 @@ class Config
 
     private function initExtraInstances(array $config): void
     {
+        $this->extraInstances = self::DEFAULT_EXTRA_INSTANCES;
         if (isset($config['extra_instances']) && is_array($config['extra_instances'])) {
             foreach ($config['extra_instances'] as $extraInstance) {
                 $instanceConfig = $extraInstance + self::DEFAULT_CONFIG + ['logs_path' => Config::getDefaultLogsPath()];
@@ -200,18 +210,5 @@ class Config
     private function initCertificatePath($config): void
     {
         $this->certificate = $config['certificate'] ? new Path($config['certificate']) : null;
-    }
-
-    private function setDefaults(): void
-    {
-        $this->extraInstances = self::DEFAULT_EXTRA_INSTANCES;
-        $this->delay = self::DEFAULT_DELAY;
-        $this->debug = self::DEFAULT_DEBUG_MODE;
-        $this->certificate = self::DEFAULT_CERTIFICATE;
-        $this->certificateKey = self::DEFAULT_CERTIFICATE_KEY;
-        $this->certificatePassphrase = self::DEFAULT_CERTIFICATE_PASSPHRASE;
-        $this->logs = self::getDefaultLogsPath();
-        $this->serverFactory = self::DEFAULT_SERVER_FACTORY;
-        $this->phiremockPath = self::DEFAULT_PHIREMOCK_PATH;
     }
 }
