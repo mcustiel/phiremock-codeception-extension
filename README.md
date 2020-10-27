@@ -58,42 +58,52 @@ Specifies the interface and port where phiremock must listen for requests.
 
 #### bin_path
 Path where Phiremock Server's "binary" is located. You can, for instance, point to the location of the phar in your file system.
+
 **Default:** codeception_dir/../vendor/bin/phiremock
 
 #### logs_path
 Path where to write the output.
+
 **Default:** codeception's tests output dir
 
 #### debug
 Whether to write debug data to log file.
+
 **Default:** false
 
 #### start_delay
 Time to wait after Phiremock Server is started before running the tests (used to give time to Phiremock Server to boot) 
+
 **Default:** 0
 
 #### expectations_path
 Specifies a directory to search for json files defining expectations to load by default.
+
 **Default:** codecption_dir/_expectations
 
 #### certificate
 Path to a certificate file to allow phiremock-server to listen for secure https connections. 
+
 **Default:** null. Meaning phiremock will only listen on unsecured http connections.
 
 #### certificate-key
 Path to the certificate key file. 
+
 **Default:** null. 
 
 #### cert-passphrase
 Path to the certificate passphrase used to encrypt the certificate (only needed if encrypted). 
+
 **Default:** null. Meaning no decryption based in passphrase will be performed.
 
 #### suites
 Specifies a list of suites for which the phiremock-server must be executed.
+
 **Default:** [] Empty array, meaning that phiremock will be executed for each suite.
 
 #### extra_instances
 Allows to specify more instances of phiremock-server to run. This is useful if you want, for instance, run one instance listening for http and one listening for https connections. Each instance has its own configuration, and can separately run for different suites.
+
 **Default:** [] Empty array, meaning that no extra phiremock-server instances are configured.
 
 **Example:**
@@ -125,6 +135,7 @@ extensions:
 
 #### server_factory
 Specifies a Factory class extending `\Mcustiel\Phiremock\Server\Factory\Factory`. Useful if you want to provide your own PSR. This works only if you install phiremock as a local dependency required in your composer file.
+
 **Default:** default
 
 **Example:**
