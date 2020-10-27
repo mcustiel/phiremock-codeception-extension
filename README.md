@@ -54,6 +54,7 @@ Note: Since Codeception version 2.2.7, extensions configuration can be added dir
 
 #### listen
 Specifies the interface and port where phiremock must listen for requests.
+
 **Default:** 0.0.0.0:8086
 
 #### bin_path
