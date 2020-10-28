@@ -3,6 +3,7 @@
 namespace Mcustiel\Phiremock\Codeception\Extension;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 
 class Config
 {
@@ -62,6 +63,7 @@ class Config
     /** @var callable */
     private $output;
 
+    /** @throws ConfigurationException */
     public function __construct(array $config, callable $output)
     {
         $this->output = $output;
@@ -149,6 +151,7 @@ class Config
         return $this->extraInstances;
     }
 
+    /** @throws ConfigurationException */
     public static function getDefaultLogsPath(): string
     {
         return Configuration::logDir();
@@ -193,6 +196,7 @@ class Config
         }
     }
 
+    /** @throws ConfigurationException */
     private function initExtraInstances(array $config): void
     {
         $this->extraInstances = self::DEFAULT_EXTRA_INSTANCES;

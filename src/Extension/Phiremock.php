@@ -23,7 +23,6 @@ use Codeception\Extension as CodeceptionExtension;
 use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Phiremock extends CodeceptionExtension
 {

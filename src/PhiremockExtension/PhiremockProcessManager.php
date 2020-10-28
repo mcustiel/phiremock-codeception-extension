@@ -25,7 +25,7 @@ use Symfony\Component\Process\Process;
  */
 class PhiremockProcessManager
 {
-    /** @var \Symfony\Component\Process\Process[] */
+    /** @var Process[] */
     private $processes;
 
     /** @var callable */
