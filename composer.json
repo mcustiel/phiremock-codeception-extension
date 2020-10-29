@@ -38,12 +38,12 @@
         "symfony/process": ">=3.0.0 <6.0.0"
     },
     "require-dev": {
-        "mcustiel/phiremock-server": "dev-feature/secure",
+        "mcustiel/phiremock-server": "dev-master",
     	"codeception/module-rest": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "guzzlehttp/guzzle" : "^7.0"
     },
-    "suggests": {
+    "suggest": {
         "mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin",
         "guzzlehttp/guzzle" : "Version 6 to execute phiremock-server as default"
     },

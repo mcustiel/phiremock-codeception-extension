@@ -25,20 +25,23 @@ use Symfony\Component\Process\Process;
  */
 class PhiremockProcessManager
 {
-    const LOG_FILE_NAME = 'phiremock.log';
-
-    /** @var \Symfony\Component\Process\Process[] */
+    /** @var Process[] */
     private $processes;
 
-    public function __construct()
+    /** @var callable */
+    private $output;
+
+    public function __construct(callable $output)
     {
         $this->processes = [];
+        $this->output = $output;
     }
 
     public function start(Config $config): void
     {
-        $process = $this->initProcess($config);
-        $this->logPhiremockCommand($config->isDebugMode(), $process);
+        $commandBuilder = new CommandBuilder($config);
+        $process = $this->initProcess($commandBuilder);
+        call_user_func($this->output, 'Running ' . $process->getCommandLine());
         $process->start();
         $this->processes[$process->getPid()] = $process;
     }
@@ -46,75 +49,18 @@ class PhiremockProcessManager
     public function stop(): void
     {
         foreach ($this->processes as $pid => $process) {
-            echo "Stopping phiremock process with pid: " . $pid . PHP_EOL;
+            call_user_func($this->output, "Stopping phiremock process with pid: " . $pid);
             $process->stop(3);
         }
     }
 
-    private function initProcess(
-        Config $config
-    ): Process {
-        $path = $config->getPhiremockPath();
-        $phiremockPath = is_file($path) ? $path : $path . DIRECTORY_SEPARATOR . 'phiremock';
-        $path = $config->getExpectationsPath();
-        $expectationsPath = is_dir($path) ? $path : '';
-        $path = $config->getLogsPath();
-        $logFile = is_dir($path) ? $path . DIRECTORY_SEPARATOR . self::LOG_FILE_NAME : $path;
-
-        $commandline = [
-            $this->getCommandPrefix() . $phiremockPath,
-            '-i',
-            $config->getInterface(),
-            '-p',
-            $config->getPort(),
-        ];
-        if ($config->isDebugMode()) {
-            $commandline[] = '-d';
-        }
-        if ($expectationsPath) {
-            $commandline[] = '-e';
-            $commandline[] = $expectationsPath;
-        }
-        if ($config->getServerFactory()) {
-            $commandline[] = '-f';
-            $commandline[] = escapeshellarg($config->getServerFactory());
-        }
-
-        if ($config->getCertificatePath()) {
-            $commandline[] = '-t';
-            $commandline[] = $config->getCertificatePath();
-            $commandline[] = '-k';
-            $commandline[] = $config->getCertificateKeyPath();
-            if ($config->getCertificatePassphrase()) {
-                $commandline[] = '-s';
-                $commandline[] = $config->getCertificatePassphrase();
-            }
-        }
-
-        $commandline[] = '>';
-        $commandline[] = $logFile;
-        $commandline[] = '2>&1';
+    private function initProcess(CommandBuilder $builder): Process
+    {
+        $commandline = $builder->build();
 
         if (method_exists(Process::class, 'fromShellCommandline')) {
             return Process::fromShellCommandline(implode(' ', $commandline));
         }
         return new Process(implode(' ', $commandline));
-    }
-
-    private function logPhiremockCommand(bool $debug, Process $process): void
-    {
-        if ($debug) {
-            echo 'Running ' . $process->getCommandLine() . PHP_EOL;
-        }
-    }
-
-    private function getCommandPrefix(): string
-    {
-        return $this->isWindows() ? '' : 'exec ';
-    }
-
-    private function isWindows(): bool
-    {
-        return DIRECTORY_SEPARATOR === '\\';
     }
 }

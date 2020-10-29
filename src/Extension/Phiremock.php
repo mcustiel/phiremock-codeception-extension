@@ -18,7 +18,9 @@
 
 namespace Codeception\Extension;
 
+use Codeception\Event\SuiteEvent;
 use Codeception\Extension as CodeceptionExtension;
+use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 
@@ -46,17 +48,22 @@ class Phiremock extends CodeceptionExtension
     ) {
         $this->setDefaultLogsPath();
         parent::__construct($config, $options);
-        $this->extensionConfig = new Config($this->config);
+        $this->extensionConfig = new Config($this->config, $this->getOutputCallable());
         $this->initProcess($process);
     }
 
-    public function startProcess(): void
+    public function startProcess(SuiteEvent $event): void
     {
         $this->writeln('Starting default phiremock instance...');
-        $this->process->start($this->extensionConfig);
+        $suite = $event->getSuite();
+        if ($this->mustRunForSuite($suite, $this->extensionConfig->getSuites())) {
+            $this->process->start($this->extensionConfig);
+        }
         foreach ($this->extensionConfig->getExtraInstances() as $configInstance) {
-            $this->writeln('Starting extra phiremock instance...');
-            $this->process->start($configInstance);
+            if ($this->mustRunForSuite($suite, $configInstance->getSuites())) {
+                $this->writeln('Starting extra phiremock instance...');
+                $this->process->start($configInstance);
+            }
         }
         $this->executeDelay();
     }
@@ -65,6 +72,18 @@ class Phiremock extends CodeceptionExtension
     {
         $this->writeln('Stopping phiremock...');
         $this->process->stop();
+    }
+
+    public function getOutputCallable(): callable
+    {
+        return function (string $message) {
+            $this->writeln($message);
+        };
+    }
+
+    private function mustRunForSuite(Suite $suite, array $allowedSuites): bool
+    {
+        return empty($allowedSuites) || in_array($suite->getBaseName(), $allowedSuites, true);
     }
 
     private function executeDelay(): void
@@ -77,11 +96,13 @@ class Phiremock extends CodeceptionExtension
 
     private function initProcess(?PhiremockProcessManager $process): void
     {
-        $this->process = $process ?? new PhiremockProcessManager();
+        $this->process = $process ?? new PhiremockProcessManager($this->getOutputCallable());
     }
 
     private function setDefaultLogsPath(): void
     {
-        $this->config['logs_path'] = Config::getDefaultLogsPath();
+        if (!isset($this->config['logs_path'])) {
+            $this->config['logs_path'] = Config::getDefaultLogsPath();
+        }
     }
 }
