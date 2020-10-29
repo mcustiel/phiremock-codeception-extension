@@ -18,17 +18,14 @@
 
 namespace Codeception\Extension;
 
-use Codeception\Configuration as Config;
+use Codeception\Event\SuiteEvent;
 use Codeception\Extension as CodeceptionExtension;
+use Codeception\Suite;
+use Mcustiel\Phiremock\Codeception\Extension\Config;
+use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 
-/**
- * Codeception Extension for Phiremock.
- */
 class Phiremock extends CodeceptionExtension
 {
-    private const DEFAULT_PATH = 'vendor/bin/phiremock';
-    private const DEFAULT_PORT = 8086;
-
     /** @var array */
     public static $events = [
         'suite.before' => 'startProcess',
@@ -36,50 +33,38 @@ class Phiremock extends CodeceptionExtension
     ];
 
     /** @var array */
-    protected $config = [
-        'listen'            => '0.0.0.0:' . self::DEFAULT_PORT,
-        'debug'             => false,
-        'start_delay'       => 0,
-        'bin_path'          => self::DEFAULT_PATH,
-        'expectations_path' => null,
-        'server_factory'    => 'default'
-    ];
+    protected $config = Config::DEFAULT_CONFIG;
 
-    /** @var PhiremockProcess */
+    /** @var PhiremockProcessManager */
     private $process;
 
-    /**
-     * Class constructor.
-     *
-     * @param array            $config
-     * @param array            $options
-     * @param PhireMockProcess $process optional PhiremockProcess object
-     */
+    /** @var Config */
+    private $extensionConfig;
+
     public function __construct(
         array $config,
         array $options,
-        PhiremockProcess $process = null
+        PhiremockProcessManager $process = null
     ) {
         $this->setDefaultLogsPath();
         parent::__construct($config, $options);
-
+        $this->extensionConfig = new Config($this->config, $this->getOutputCallable());
         $this->initProcess($process);
     }
 
-    public function startProcess(): void
+    public function startProcess(SuiteEvent $event): void
     {
-        list($ip, $port) = explode(':', $this->config['listen']);
-
-        $this->writeln('Starting phiremock...');
-        $this->process->start(
-            $ip,
-            empty($port) ? self::DEFAULT_PORT: (int) $port,
-            $this->getPathFromCodeceptionDir($this->config['bin_path']),
-            $this->getPathFromCodeceptionDir($this->config['logs_path']),
-            $this->config['debug'],
-            $this->config['expectations_path'] ? $this->getPathFromCodeceptionDir($this->config['expectations_path']) : null,
-            $this->getFactoryClass()
-        );
+        $this->writeln('Starting default phiremock instance...');
+        $suite = $event->getSuite();
+        if ($this->mustRunForSuite($suite, $this->extensionConfig->getSuites())) {
+            $this->process->start($this->extensionConfig);
+        }
+        foreach ($this->extensionConfig->getExtraInstances() as $configInstance) {
+            if ($this->mustRunForSuite($suite, $configInstance->getSuites())) {
+                $this->writeln('Starting extra phiremock instance...');
+                $this->process->start($configInstance);
+            }
+        }
         $this->executeDelay();
     }
 
@@ -89,44 +74,35 @@ class Phiremock extends CodeceptionExtension
         $this->process->stop();
     }
 
-    private function getFactoryClass(): ?string
+    public function getOutputCallable(): callable
     {
-        if (isset($this->config['server_factory'])) {
-            $factoryClassConfig = $this->config['server_factory'];
-            if ($factoryClassConfig !== 'default') {
-                return $this->config['server_factory'];
-            }
-        }
-        return null;
+        return function (string $message) {
+            $this->writeln($message);
+        };
+    }
+
+    private function mustRunForSuite(Suite $suite, array $allowedSuites): bool
+    {
+        return empty($allowedSuites) || in_array($suite->getBaseName(), $allowedSuites, true);
     }
 
     private function executeDelay(): void
     {
-        if (isset($this->config['startDelay'])) {
-            $this->writeln('PHIREMOCK/DEPRECATION: startDelay option is deprecated and will be removed. Please use start_delay');
-            $this->config['start_delay'] = $this->config['startDelay'];
-        }
-
-        if ($this->config['start_delay']) {
-            sleep($this->config['start_delay']);
+        $delay = $this->extensionConfig->getDelay();
+        if ($delay > 0) {
+            sleep($delay);
         }
     }
 
-    private function initProcess(?PhiremockProcess $process): void
+    private function initProcess(?PhiremockProcessManager $process): void
     {
-        $this->process = $process ?? new PhiremockProcess();
+        $this->process = $process ?? new PhiremockProcessManager($this->getOutputCallable());
     }
 
     private function setDefaultLogsPath(): void
     {
-        $this->config['logs_path'] = Config::logDir();
-    }
-
-    private function getPathFromCodeceptionDir($path): string
-    {
-        if (substr($path, 0, 1) === '/') {
-            return $path;
+        if (!isset($this->config['logs_path'])) {
+            $this->config['logs_path'] = Config::getDefaultLogsPath();
         }
-        return realpath(Config::projectDir() . $path);
     }
 }

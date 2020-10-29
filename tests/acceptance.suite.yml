@@ -7,10 +7,10 @@
 class_name: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
-            url: http://localhost:18080
-        - REST:
+        - REST
+        - \Helper\Acceptance
+    config:
+        REST:
             depends: PhpBrowser
             url: 'http://localhost:18080'
-        - \Helper\Acceptance
         
