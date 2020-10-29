@@ -17,7 +17,7 @@ extensions:
         \Codeception\Extension\Phiremock:
             debug: true
             start_delay: 1
-            suites: 
+            suites:
               - unit
             extra_instances:
               -
@@ -25,4 +25,4 @@ extensions:
                 debug: true
                 expectations_path:
                 server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7
-                logs_path: tests/_output/phiremock.extra.log 
+                logs_path: tests/_output/phiremock.extra.log
