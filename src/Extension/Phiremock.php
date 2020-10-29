@@ -19,6 +19,7 @@
 namespace Codeception\Extension;
 
 use Codeception\Event\SuiteEvent;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Extension as CodeceptionExtension;
 use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
@@ -41,6 +42,7 @@ class Phiremock extends CodeceptionExtension
     /** @var Config */
     private $extensionConfig;
 
+    /**  @throws ConfigurationException */
     public function __construct(
         array $config,
         array $options,
@@ -99,6 +101,7 @@ class Phiremock extends CodeceptionExtension
         $this->process = $process ?? new PhiremockProcessManager($this->getOutputCallable());
     }
 
+    /** @throws ConfigurationException */
     private function setDefaultLogsPath(): void
     {
         if (!isset($this->config['logs_path'])) {
