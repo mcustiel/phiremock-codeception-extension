@@ -33,7 +33,7 @@
     "description" : "Codeception extension for Phiremock. Allows to stub remote services for HTTP requests.",
     "license" : "GPL-3.0-or-later",
     "require" : {
-        "php" : "^7.2",
+        "php" : "^7.2|^8.0",
         "codeception/codeception" : ">=2.2 <5.0",
         "symfony/process": ">=3.0.0 <6.0.0"
     },

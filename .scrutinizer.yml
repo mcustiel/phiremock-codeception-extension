@@ -26,3 +26,7 @@ build:
       environment:
         php:
           version: 7.4
+    php80:
+      environment:
+        php:
+          version: 8.0
