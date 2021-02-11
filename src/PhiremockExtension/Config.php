@@ -208,7 +208,7 @@ class Config
             return;
         }
 
-        if ($config['start_delay']) {
+        if (is_int($config['start_delay']) && $config['start_delay'] >= 0) {
             $this->delay = (int) $config['start_delay'];
         }
     }
