@@ -33,7 +33,7 @@ class Path
 
     public function absoluteOrRelativeToCodeceptionDir(): string
     {
-        if (substr($this->path, 0, 1) === '/') {
+        if (preg_match('%^(?:[a-z]:\\|/)%', $this->path) === 1) {
             return $this->path;
         }
         return Configuration::projectDir() . $this->path;
