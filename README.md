@@ -172,10 +172,10 @@ and in the extension config provide the fully qualified namespace to that class:
 
 ```yaml
  enabled:
-        - \Codeception\Extension\Phiremock
-    config:
-        \Codeception\Extension\Phiremock:
-            server_factory: \My\Namespace\FactoryWithGuzzle7
+   - \Codeception\Extension\Phiremock
+ config:
+   \Codeception\Extension\Phiremock:
+     server_factory: \My\Namespace\FactoryWithGuzzle7
 ```
 
 ## See also:
