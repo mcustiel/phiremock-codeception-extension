@@ -23,10 +23,18 @@ Optionally, you can install Phiremock Server in case you want to have it between
     "mcustiel/phiremock-codeception-extension": "^2.0",
     "mcustiel/phiremock-server": "^1.0",
     "guzzlehttp/guzzle": "^6.0"
+}
 ```
 
 Phiremock server has been made an optional dependency in case you want to run it from a phar file, a global composer dependency or in a docker container, and not have it as a project dependency.
 
+Note: if you are going to use *wait_until_ready* configuration as true, you will also need Phiremock Client installed:
+```json
+"require-dev": {
+    "mcustiel/phiremock-codeception-extension": "^2.0",
+    "mcustiel/phiremock-client": "^1.0"
+}
+```
 ## Configuration
 
 ```yaml
@@ -127,7 +135,7 @@ extensions:
         \Codeception\Extension\Phiremock:
             listen: 127.0.0.1:18080  
             debug: true 
-            start_delay: 1
+            wait_until_ready: true
             expectations_path: /my/expectations/path-1 
             suites: 
                 - acceptance
