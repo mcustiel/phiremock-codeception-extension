@@ -22,6 +22,10 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Extension as CodeceptionExtension;
 use Codeception\Suite;
+use Mcustiel\Phiremock\Client\Connection\Host;
+use Mcustiel\Phiremock\Client\Connection\Port;
+use Mcustiel\Phiremock\Client\Connection\Scheme;
+use Mcustiel\Phiremock\Client\Factory;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 
@@ -68,6 +72,7 @@ class Phiremock extends CodeceptionExtension
             }
         }
         $this->executeDelay();
+        $this->waitUntilReady();
     }
 
     public function stopProcess(): void
@@ -107,5 +112,41 @@ class Phiremock extends CodeceptionExtension
         if (!isset($this->config['logs_path'])) {
             $this->config['logs_path'] = Config::getDefaultLogsPath();
         }
+    }
+
+    private function waitUntilReady(): void
+    {
+        if (!$this->extensionConfig->isWaitUntilReady()) {
+            return;
+        }
+
+        $this->writeln('Waiting until Phiremock is ready...');
+        $client = Factory::createDefault()
+            ->createPhiremockClient(
+                new Host($this->extensionConfig->getInterface()),
+                new Port($this->extensionConfig->getPort()),
+                $this->extensionConfig->isSecure() ? Scheme::createHttps() : Scheme::createHttp()
+            );
+
+        $start = \microtime(true);
+
+        while (true) {
+            try {
+                $client->reset();
+                break;
+            } catch (\Throwable $e) {
+                \sleep(1);
+            }
+
+            $elapsed = (int) (\microtime(true) - $start);
+
+            if ($elapsed > $this->extensionConfig->getWaitUntilReadyTimeout()) {
+                throw new \RuntimeException(
+                    \sprintf('Phiremock failed to start within %d seconds', $this->extensionConfig->getWaitUntilReadyTimeout())
+                );
+            }
+        }
+
+        $this->writeln('Phiremock is ready!');
     }
 }

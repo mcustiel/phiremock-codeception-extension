@@ -77,6 +77,17 @@ Time to wait after Phiremock Server is started before running the tests (used to
 
 **Default:** 0
 
+#### wait_until_ready
+This is more robust alternative to start_delay. It will check if Phiremock Server is actually running before running the tests.
+Note: it depends on Phiremeock Client to be installed via composer (it is used to check the status of Phiremock Server).
+
+**Default:** false
+
+#### wait_until_ready_timeout
+This will be used only if wait_until_ready is set to true. You can specify after how many seconds it will stop checking if Phiremock Server is running.
+
+**Default:** 30
+
 #### expectations_path
 Specifies a directory to search for json files defining expectations to load by default.
 
