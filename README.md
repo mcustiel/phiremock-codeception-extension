@@ -28,13 +28,6 @@ Optionally, you can install Phiremock Server in case you want to have it between
 
 Phiremock server has been made an optional dependency in case you want to run it from a phar file, a global composer dependency or in a docker container, and not have it as a project dependency.
 
-Note: if you are going to use *wait_until_ready* configuration as true, you will also need Phiremock Client installed:
-```json
-"require-dev": {
-    "mcustiel/phiremock-codeception-extension": "^2.0",
-    "mcustiel/phiremock-client": "^1.0"
-}
-```
 ## Configuration
 
 ```yaml
@@ -47,7 +40,8 @@ extensions:
             bin_path: ../vendor/bin # defaults to codeception_dir/../vendor/bin 
             logs_path: /var/log/my_app/tests/logs # defaults to codeception's tests output dir
             debug: true # defaults to false
-            start_delay: 1 # default to 0
+            wait_until_ready: true # defaults to false
+            wait_until_ready_timeout: 15 # defaults to 30
             expectations_path: /my/expectations/path # defaults to tests/_expectations
             server_factory: \My\FactoryClass # defaults to 'default'
             extra_instances: [] # deaults to an empty array
@@ -135,7 +129,6 @@ extensions:
         \Codeception\Extension\Phiremock:
             listen: 127.0.0.1:18080  
             debug: true 
-            wait_until_ready: true
             expectations_path: /my/expectations/path-1 
             suites: 
                 - acceptance
