@@ -18,10 +18,10 @@
 
 namespace Mcustiel\Phiremock\Codeception\Extension;
 
-use Mcustiel\Phiremock\Client\Factory;
 use Mcustiel\Phiremock\Client\Connection\Host;
 use Mcustiel\Phiremock\Client\Connection\Port;
 use Mcustiel\Phiremock\Client\Connection\Scheme;
+use Mcustiel\Phiremock\Client\Factory;
 use Mcustiel\Phiremock\Codeception\Extension\ReadinessChecker\CurlChecker;
 use Mcustiel\Phiremock\Codeception\Extension\ReadinessChecker\PhiremockClientChecker;
 

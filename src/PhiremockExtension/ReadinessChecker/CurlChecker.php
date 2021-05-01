@@ -33,7 +33,7 @@ class CurlChecker implements ReadinessCheckerInterface
     {
         $ch = \curl_init();
 
-        \curl_setopt($ch, CURLOPT_URL,$this->url . '/__phiremock/reset');
+        \curl_setopt($ch, CURLOPT_URL, $this->url . '/__phiremock/reset');
         \curl_setopt($ch, CURLOPT_POST, 1);
         \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

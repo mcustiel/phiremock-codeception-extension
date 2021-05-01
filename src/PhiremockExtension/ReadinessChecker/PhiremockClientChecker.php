@@ -19,9 +19,8 @@
 namespace Mcustiel\Phiremock\Codeception\Extension\ReadinessChecker;
 
 use GuzzleHttp\Exception\ConnectException;
-use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerInterface;
 use Mcustiel\Phiremock\Client\Phiremock;
-use Psr\Http\Client\ClientExceptionInterface;
+use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerInterface;
 
 class PhiremockClientChecker implements ReadinessCheckerInterface
 {
@@ -37,7 +36,8 @@ class PhiremockClientChecker implements ReadinessCheckerInterface
         try {
             $this->client->reset();
             return true;
-        } catch (ConnectException $e) {}
+        } catch (ConnectException $e) {
+        }
 
         return false;
     }
