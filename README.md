@@ -23,6 +23,7 @@ Optionally, you can install Phiremock Server in case you want to have it between
     "mcustiel/phiremock-codeception-extension": "^2.0",
     "mcustiel/phiremock-server": "^1.0",
     "guzzlehttp/guzzle": "^6.0"
+}
 ```
 
 Phiremock server has been made an optional dependency in case you want to run it from a phar file, a global composer dependency or in a docker container, and not have it as a project dependency.
@@ -39,7 +40,8 @@ extensions:
             bin_path: ../vendor/bin # defaults to codeception_dir/../vendor/bin 
             logs_path: /var/log/my_app/tests/logs # defaults to codeception's tests output dir
             debug: true # defaults to false
-            start_delay: 1 # default to 0
+            wait_until_ready: true # defaults to false
+            wait_until_ready_timeout: 15 # defaults to 30
             expectations_path: /my/expectations/path # defaults to tests/_expectations
             server_factory: \My\FactoryClass # defaults to 'default'
             extra_instances: [] # deaults to an empty array
@@ -76,6 +78,17 @@ Whether to write debug data to log file.
 Time to wait after Phiremock Server is started before running the tests (used to give time to Phiremock Server to boot) 
 
 **Default:** 0
+
+#### wait_until_ready
+This is more robust alternative to start_delay. It will check if Phiremock Server is actually running before running the tests.
+Note: it depends on Phiremeock Client to be installed via composer (it is used to check the status of Phiremock Server).
+
+**Default:** false
+
+#### wait_until_ready_timeout
+This will be used only if wait_until_ready is set to true. You can specify after how many seconds it will stop checking if Phiremock Server is running.
+
+**Default:** 30
 
 #### expectations_path
 Specifies a directory to search for json files defining expectations to load by default.
@@ -116,7 +129,6 @@ extensions:
         \Codeception\Extension\Phiremock:
             listen: 127.0.0.1:18080  
             debug: true 
-            start_delay: 1
             expectations_path: /my/expectations/path-1 
             suites: 
                 - acceptance

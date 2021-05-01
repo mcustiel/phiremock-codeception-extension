@@ -24,6 +24,7 @@ use Codeception\Extension as CodeceptionExtension;
 use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
+use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerFactory;
 
 class Phiremock extends CodeceptionExtension
 {
@@ -68,6 +69,7 @@ class Phiremock extends CodeceptionExtension
             }
         }
         $this->executeDelay();
+        $this->waitUntilReady();
     }
 
     public function stopProcess(): void
@@ -107,5 +109,39 @@ class Phiremock extends CodeceptionExtension
         if (!isset($this->config['logs_path'])) {
             $this->config['logs_path'] = Config::getDefaultLogsPath();
         }
+    }
+
+    private function waitUntilReady(): void
+    {
+        if (!$this->extensionConfig->isWaitUntilReady()) {
+            return;
+        }
+
+        $this->writeln('Waiting until Phiremock is ready...');
+
+        $readinessChecker = ReadinessCheckerFactory::create(
+            $this->extensionConfig->getInterface(),
+            $this->extensionConfig->getPort(),
+            $this->extensionConfig->isSecure()
+        );
+
+        $start = \microtime(true);
+
+        while (true) {
+            if ($readinessChecker->isReady()) {
+                break;
+            }
+
+            \sleep(1);
+            $elapsed = (int) (\microtime(true) - $start);
+
+            if ($elapsed > $this->extensionConfig->getWaitUntilReadyTimeout()) {
+                throw new \RuntimeException(
+                    \sprintf('Phiremock failed to start within %d seconds', $this->extensionConfig->getWaitUntilReadyTimeout())
+                );
+            }
+        }
+
+        $this->writeln('Phiremock is ready!');
     }
 }
