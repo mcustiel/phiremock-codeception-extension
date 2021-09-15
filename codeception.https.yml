@@ -20,7 +20,10 @@ extensions:
             server_factory: Mcustiel\Phiremock\Codeception\Module\Tests\Helpers\FactoryWithGuzzle7
             logs_path: tests/_output/phiremock.extra.log
             debug: true
-            start_delay: 1
+            start_delay: 0
+            wait_until_ready: true
+            wait_until_ready_timeout: 5
+            wait_until_ready_interval: 10000
             extra_instances:
               -
                 listen: 0.0.0.0:18443

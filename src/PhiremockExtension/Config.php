@@ -38,21 +38,23 @@ class Config
     public const DEFAULT_SUITES = [];
     public const DEFAULT_WAIT_UNTIL_READY = false;
     public const DEFAULT_WAIT_UNTIL_READY_TIMEOUT = 30;
+    public const DEFAULT_WAIT_UNTIL_READY_INTERVAL_MICROS = 50000;
 
     public const DEFAULT_CONFIG = [
-        'listen'                   => self::DEFAULT_INTERFACE . ':' . self::DEFAULT_PORT,
-        'debug'                    => self::DEFAULT_DEBUG_MODE,
-        'start_delay'              => self::DEFAULT_DELAY,
-        'bin_path'                 => self::DEFAULT_PHIREMOCK_PATH,
-        'expectations_path'        => self::DEFAULT_EXPECTATIONS_PATH,
-        'server_factory'           => self::DEFAULT_SERVER_FACTORY,
-        'certificate'              => self::DEFAULT_CERTIFICATE,
-        'certificate_key'          => self::DEFAULT_CERTIFICATE_KEY,
-        'cert_passphrase'          => self::DEFAULT_CERTIFICATE_PASSPHRASE,
-        'extra_instances'          => self::DEFAULT_EXTRA_INSTANCES,
-        'suites'                   => self::DEFAULT_SUITES,
-        'wait_until_ready'         => self::DEFAULT_WAIT_UNTIL_READY,
-        'wait_until_ready_timeout' => self::DEFAULT_WAIT_UNTIL_READY_TIMEOUT
+        'listen'                    => self::DEFAULT_INTERFACE . ':' . self::DEFAULT_PORT,
+        'debug'                     => self::DEFAULT_DEBUG_MODE,
+        'start_delay'               => self::DEFAULT_DELAY,
+        'bin_path'                  => self::DEFAULT_PHIREMOCK_PATH,
+        'expectations_path'         => self::DEFAULT_EXPECTATIONS_PATH,
+        'server_factory'            => self::DEFAULT_SERVER_FACTORY,
+        'certificate'               => self::DEFAULT_CERTIFICATE,
+        'certificate_key'           => self::DEFAULT_CERTIFICATE_KEY,
+        'cert_passphrase'           => self::DEFAULT_CERTIFICATE_PASSPHRASE,
+        'extra_instances'           => self::DEFAULT_EXTRA_INSTANCES,
+        'suites'                    => self::DEFAULT_SUITES,
+        'wait_until_ready'          => self::DEFAULT_WAIT_UNTIL_READY,
+        'wait_until_ready_timeout'  => self::DEFAULT_WAIT_UNTIL_READY_TIMEOUT,
+        'wait_until_ready_interval' => self::DEFAULT_WAIT_UNTIL_READY_INTERVAL_MICROS,
     ];
 
     /** @var string */
@@ -87,6 +89,8 @@ class Config
     private $waitUntilReady;
     /** @var int */
     private $waitUntilReadyTimeout;
+    /** @var int */
+    private $waitUntilReadyCheckIntervalMicros;
 
     /** @throws ConfigurationException */
     public function __construct(array $config, callable $output)
@@ -106,6 +110,7 @@ class Config
         $this->suites = $config['suites'];
         $this->waitUntilReady = (bool) $config['wait_until_ready'];
         $this->waitUntilReadyTimeout = (int) $config['wait_until_ready_timeout'];
+        $this->waitUntilReadyCheckIntervalMicros = (int) $config['wait_until_ready_interval'];
     }
 
     public function getSuites(): array
@@ -184,7 +189,7 @@ class Config
             && $this->getCertificateKeyPath() !== null;
     }
 
-    public function isWaitUntilReady(): bool
+    public function waitUntilReady(): bool
     {
         return $this->waitUntilReady;
     }
@@ -192,6 +197,11 @@ class Config
     public function getWaitUntilReadyTimeout(): int
     {
         return $this->waitUntilReadyTimeout;
+    }
+
+    public function getWaitUntilReadyIntervalMicros(): int
+    {
+        return $this->waitUntilReadyCheckIntervalMicros;
     }
 
     /** @throws ConfigurationException */
