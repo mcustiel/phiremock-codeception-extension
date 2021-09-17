@@ -41,7 +41,8 @@ extensions:
             logs_path: /var/log/my_app/tests/logs # defaults to codeception's tests output dir
             debug: true # defaults to false
             wait_until_ready: true # defaults to false
-            wait_until_ready_timeout: 15 # defaults to 30
+            wait_until_ready_timeout: 15 # (seconds) defaults to 30
+            wait_until_ready_interval: 100 # (microseconds) defaults to 50000
             expectations_path: /my/expectations/path # defaults to tests/_expectations
             server_factory: \My\FactoryClass # defaults to 'default'
             extra_instances: [] # deaults to an empty array

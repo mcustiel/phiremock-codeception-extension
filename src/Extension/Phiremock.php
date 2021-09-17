@@ -113,7 +113,7 @@ class Phiremock extends CodeceptionExtension
 
     private function waitUntilReady(): void
     {
-        if (!$this->extensionConfig->isWaitUntilReady()) {
+        if (!$this->extensionConfig->waitUntilReady()) {
             return;
         }
 
@@ -126,22 +126,21 @@ class Phiremock extends CodeceptionExtension
         );
 
         $start = \microtime(true);
-
+        $interval = $this->extensionConfig->getWaitUntilReadyIntervalMicros();
+        $timeout = $this->extensionConfig->getWaitUntilReadyTimeout();
         while (true) {
             if ($readinessChecker->isReady()) {
                 break;
             }
-
-            \sleep(1);
+            \usleep($interval);
             $elapsed = (int) (\microtime(true) - $start);
 
-            if ($elapsed > $this->extensionConfig->getWaitUntilReadyTimeout()) {
+            if ($elapsed > $timeout) {
                 throw new \RuntimeException(
                     \sprintf('Phiremock failed to start within %d seconds', $this->extensionConfig->getWaitUntilReadyTimeout())
                 );
             }
         }
-
         $this->writeln('Phiremock is ready!');
     }
 }
