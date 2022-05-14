@@ -30,3 +30,7 @@ build:
       environment:
         php:
           version: 8.0
+    php81:
+      environment:
+        php:
+          version: 8.1
