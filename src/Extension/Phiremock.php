@@ -25,8 +25,6 @@ use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerFactory;
-use Mcustiel\Phiremock\Codeception\Extension\PhiremockPHP72;
-use Mcustiel\Phiremock\Codeception\Extension\PhiremockPHP74p;
 
 class Phiremock extends CodeceptionExtension
 {
@@ -36,8 +34,14 @@ class Phiremock extends CodeceptionExtension
         'suite.after'  => 'stopProcess',
     ];
 
-    /** Phiremock72|Phiremock74p */
-    private $instance;
+    /** @var array */
+    protected array $config = Config::DEFAULT_CONFIG;
+
+    /** @var PhiremockProcessManager */
+    private $process;
+
+    /** @var Config */
+    private $extensionConfig;
 
     /**  @throws ConfigurationException */
     public function __construct(
@@ -45,20 +49,98 @@ class Phiremock extends CodeceptionExtension
         array $options,
         PhiremockProcessManager $process = null
     ) {
-        if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
-            $this->instance = new PhiremockPHP74p($config, $options, $process);
-        } else {
-            $this->instance = new PhiremockPHP72($config, $options, $process);
-        }
+        $this->setDefaultLogsPath();
+        parent::__construct($config, $options);
+        $this->extensionConfig = new Config($this->config, $this->getOutputCallable());
+        $this->initProcess($process);
     }
 
     public function startProcess(SuiteEvent $event): void
     {
-        $this->instance->startProcess($event);
+        $this->writeln('Starting default phiremock instance...');
+        $suite = $event->getSuite();
+        if ($this->mustRunForSuite($suite, $this->extensionConfig->getSuites())) {
+            $this->process->start($this->extensionConfig);
+        }
+        foreach ($this->extensionConfig->getExtraInstances() as $configInstance) {
+            if ($this->mustRunForSuite($suite, $configInstance->getSuites())) {
+                $this->writeln('Starting extra phiremock instance...');
+                $this->process->start($configInstance);
+            }
+        }
+        $this->executeDelay();
+        $this->waitUntilReady();
     }
 
     public function stopProcess(): void
     {
-        $this->instance->stopProcess();
+        $this->writeln('Stopping phiremock...');
+        $this->process->stop();
+    }
+
+    public function getOutputCallable(): callable
+    {
+        return function (string $message) {
+            $this->writeln($message);
+        };
+    }
+
+    private function mustRunForSuite(Suite $suite, array $allowedSuites): bool
+    {
+        return empty($allowedSuites) || in_array($suite->getBaseName(), $allowedSuites, true);
+    }
+
+    private function executeDelay(): void
+    {
+        $delay = $this->extensionConfig->getDelay();
+        if ($delay > 0) {
+            sleep($delay);
+        }
+    }
+
+    private function initProcess(?PhiremockProcessManager $process): void
+    {
+        $this->process = $process ?? new PhiremockProcessManager($this->getOutputCallable());
+    }
+
+    /** @throws ConfigurationException */
+    private function setDefaultLogsPath(): void
+    {
+        if (!isset($this->config['logs_path'])) {
+            $this->config['logs_path'] = Config::getDefaultLogsPath();
+        }
+    }
+
+    private function waitUntilReady(): void
+    {
+        if (!$this->extensionConfig->waitUntilReady()) {
+            return;
+        }
+
+        $this->writeln('Waiting until Phiremock is ready...');
+
+        $readinessChecker = ReadinessCheckerFactory::create(
+            $this->extensionConfig->getInterface(),
+            $this->extensionConfig->getPort(),
+            $this->extensionConfig->isSecure()
+            );
+
+        $start = \microtime(true);
+        $interval = $this->extensionConfig->getWaitUntilReadyIntervalMicros();
+        $timeout = $this->extensionConfig->getWaitUntilReadyTimeout();
+        while (true) {
+            if ($readinessChecker->isReady()) {
+                break;
+            }
+            \usleep($interval);
+            $elapsed = (int) (\microtime(true) - $start);
+
+            if ($elapsed > $timeout) {
+                throw new \RuntimeException(
+                    \sprintf('Phiremock failed to start within %d seconds', $this->extensionConfig->getWaitUntilReadyTimeout())
+                    );
+            }
+        }
+        $this->writeln('Phiremock is ready!');
     }
 }
