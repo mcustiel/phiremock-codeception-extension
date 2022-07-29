@@ -14,18 +14,6 @@ build:
       - php-scrutinizer-run
       - ./vendor/bin/codecept run
   nodes:
-    php72:
-      environment:
-        php:
-          version: 7.2
-    php73:
-      environment:
-        php:
-          version: 7.3
-    php74:
-      environment:
-        php:
-          version: 7.4
     php80:
       environment:
         php:
