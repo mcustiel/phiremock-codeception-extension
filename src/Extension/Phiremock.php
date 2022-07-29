@@ -29,13 +29,13 @@ use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerFactory;
 class Phiremock extends CodeceptionExtension
 {
     /** @var array */
-    public static $events = [
+    public static array $events = [
         'suite.before' => 'startProcess',
         'suite.after'  => 'stopProcess',
     ];
 
     /** @var array */
-    protected $config = Config::DEFAULT_CONFIG;
+    protected array $config = Config::DEFAULT_CONFIG;
 
     /** @var PhiremockProcessManager */
     private $process;
