@@ -16,7 +16,7 @@
  * along with phiremock-codeception-extension.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Codeception\Extension;
+namespace Mcustiel\Phiremock\Codeception\Extension;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Exception\ConfigurationException;
@@ -26,7 +26,7 @@ use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerFactory;
 
-class Phiremock74p extends CodeceptionExtension
+class PhiremockPHP74p extends CodeceptionExtension
 {
     /** @var array */
     public static array $events = [

@@ -25,8 +25,8 @@ use Codeception\Suite;
 use Mcustiel\Phiremock\Codeception\Extension\Config;
 use Mcustiel\Phiremock\Codeception\Extension\PhiremockProcessManager;
 use Mcustiel\Phiremock\Codeception\Extension\ReadinessCheckerFactory;
-use Mcustiel\Phiremock\Codeception\Extension\Phiremock72;
-use Mcustiel\Phiremock\Codeception\Extension\Phiremock74p;
+use Mcustiel\Phiremock\Codeception\Extension\PhiremockPHP72;
+use Mcustiel\Phiremock\Codeception\Extension\PhiremockPHP74p;
 
 class Phiremock extends CodeceptionExtension
 {
@@ -46,9 +46,9 @@ class Phiremock extends CodeceptionExtension
         PhiremockProcessManager $process = null
     ) {
         if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
-            $this->instance = new Phiremock74p($config, $options, $process);
+            $this->instance = new PhiremockPHP74p($config, $options, $process);
         } else {
-            $this->instance = new Phiremock72($config, $options, $process);
+            $this->instance = new PhiremockPHP72($config, $options, $process);
         }
     }
 
