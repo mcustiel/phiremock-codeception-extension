@@ -207,7 +207,7 @@ class Config
     /** @throws ConfigurationException */
     public static function getDefaultLogsPath(): string
     {
-        return Configuration::logDir();
+        return Configuration::outputDir();
     }
 
     private function initInterfaceAndPort(array $config): void
