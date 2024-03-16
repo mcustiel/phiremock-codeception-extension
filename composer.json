@@ -28,7 +28,7 @@
             "Mcustiel\\Phiremock\\Codeception\\Module\\Tests\\Helpers\\": "tests/_helpers"
         }
     },
-    "name" : "mcustiel/phiremock-codeception-extension",
+    "name" : "martinsr/phiremock-codeception-extension-laravel-11",
     "type" : "project",
     "description" : "Codeception extension for Phiremock. Allows to stub remote services for HTTP requests.",
     "license" : "GPL-3.0-or-later",
