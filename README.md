@@ -12,7 +12,7 @@ Codeception extension to make working with [Phiremock Server](https://github.com
 
 ```json
     "require-dev": {
-        "mcustiel/phiremock-codeception-extension": "^2.0"
+        "mcustiel/phiremock-codeception-extension": "^3.0"
     }
 ```
 
@@ -22,7 +22,7 @@ Optionally, you can install Phiremock Server in case you want to have it between
 "require-dev": {
     "mcustiel/phiremock-codeception-extension": "^2.0",
     "mcustiel/phiremock-server": "^1.0",
-    "guzzlehttp/guzzle": "^6.0"
+    "guzzlehttp/guzzle": "^7.0"
 }
 ```
 
