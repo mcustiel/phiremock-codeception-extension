@@ -21,4 +21,4 @@ build:
     php83:
       environment:
         php:
-          version: 8.3
+          version: 8.3.0
