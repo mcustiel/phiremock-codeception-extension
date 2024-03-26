@@ -35,13 +35,13 @@
     "require" : {
         "php" : "^8.2",
         "codeception/codeception" : "^5.0",
-        "symfony/process": "^v7.0.4"
+        "symfony/process": "^v7.0"
     },
     "require-dev": {
         "mcustiel/phiremock-server": "^1.0",
     	"codeception/module-rest": "^3.0",
         "codeception/module-phpbrowser": "^3.0",
-        "guzzlehttp/guzzle" : "^7.8.1"
+        "guzzlehttp/guzzle" : "^7.0"
     },
     "suggest": {
         "mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin",
