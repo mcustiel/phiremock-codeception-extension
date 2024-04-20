@@ -14,6 +14,14 @@ build:
       - php-scrutinizer-run
       - ./vendor/bin/codecept run
   nodes:
+    php80:
+      environment:
+        php:
+          version: 8.0
+    php81:
+      environment:
+        php:
+          version: 8.1      
     php82:
       environment:
         php:
