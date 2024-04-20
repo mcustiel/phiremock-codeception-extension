@@ -39,7 +39,7 @@
     },
     "require-dev": {
         "mcustiel/phiremock-server": "^1.0",
-        "codeception/module-rest": "^3.0",
+    	"codeception/module-rest": "^3.0",
         "codeception/module-phpbrowser": "^3.0",
         "guzzlehttp/guzzle" : "^7.0"
     },
