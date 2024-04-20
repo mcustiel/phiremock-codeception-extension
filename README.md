@@ -156,13 +156,13 @@ Specifies a Factory class extending `\Mcustiel\Phiremock\Server\Factory\Factory`
 If this is in your composer.json:
 
 ```json
-"require-dev": {
+"require-dev" : {
     "mcustiel/phiremock-codeception-extension": "v2.0",
     "mcustiel/phiremock-server": "^1.0",
     "guzzlehttp/guzzle": "^7.0"
 ```
 
-The you can create a factory as follows:
+Then you can create a factory as follows:
 
 ```php
 <?php
