@@ -35,7 +35,7 @@
     "require" : {
         "php" : "^8.0",
         "codeception/codeception" : "^5.0",
-        "symfony/process": ">=5.0.0 <7.0.0"
+        "symfony/process": ">=5.0.0 <8.0.0"
     },
     "require-dev": {
         "mcustiel/phiremock-server": "^1.0",

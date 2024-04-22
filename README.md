@@ -12,7 +12,7 @@ Codeception extension to make working with [Phiremock Server](https://github.com
 
 ```json
     "require-dev": {
-        "mcustiel/phiremock-codeception-extension": "^2.0"
+        "mcustiel/phiremock-codeception-extension": "^3.0"
     }
 ```
 
@@ -162,7 +162,7 @@ If this is in your composer.json:
     "guzzlehttp/guzzle": "^7.0"
 ```
 
-The you can create a factory as follows:
+Then you can create a factory as follows:
 
 ```php
 <?php

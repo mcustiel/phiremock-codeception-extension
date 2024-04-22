@@ -21,4 +21,12 @@ build:
     php81:
       environment:
         php:
-          version: 8.1
+          version: 8.1      
+    php82:
+      environment:
+        php:
+          version: 8.2
+    php83:
+      environment:
+        php:
+          version: 8.3.0
