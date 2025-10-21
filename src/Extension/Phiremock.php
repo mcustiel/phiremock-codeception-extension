@@ -47,7 +47,7 @@ class Phiremock extends CodeceptionExtension
     public function __construct(
         array $config,
         array $options,
-        PhiremockProcessManager $process = null
+        ?PhiremockProcessManager $process = null
     ) {
         $this->setDefaultLogsPath();
         parent::__construct($config, $options);
