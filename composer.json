@@ -1,51 +1,52 @@
 {
-    "keywords" : [
-        "http",
-        "mock",
-        "server",
-        "external",
-        "acceptance",
-        "tests",
-        "codeception",
-        "extension",
-        "phiremock"
-    ],
-     "authors" : [{
-            "name" : "Mariano Custiel",
-            "email" : "jmcustiel@gmail.com",
-            "homepage" : "https://github.com/mcustiel",
-            "role" : "Administrator"
-        }
-    ],
-    "autoload" : {
-        "psr-4" : {
-            "Codeception\\Extension\\" : "src/Extension",
-            "Mcustiel\\Phiremock\\Codeception\\Extension\\": "src/PhiremockExtension"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "Mcustiel\\Phiremock\\Codeception\\Module\\Tests\\Helpers\\": "tests/_helpers"
-        }
-    },
-    "name" : "mcustiel/phiremock-codeception-extension",
-    "type" : "project",
-    "description" : "Codeception extension for Phiremock. Allows to stub remote services for HTTP requests.",
-    "license" : "GPL-3.0-or-later",
-    "require" : {
-        "php" : "^8.0",
-        "codeception/codeception" : "^5.0",
-        "symfony/process": ">=5.0.0 <8.0.0"
-    },
-    "require-dev": {
-        "mcustiel/phiremock-server": "^1.0",
-    	"codeception/module-rest": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "guzzlehttp/guzzle" : "^7.0"
-    },
-    "suggest": {
-        "mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin",
-        "guzzlehttp/guzzle" : "Version 6 to execute phiremock-server as default"
-    },
-    "prefer-stable": true
+	"keywords": [
+		"http",
+		"mock",
+		"server",
+		"external",
+		"acceptance",
+		"tests",
+		"codeception",
+		"extension",
+		"phiremock"
+	],
+	"authors": [
+		{
+			"name": "Mariano Custiel",
+			"email": "jmcustiel@gmail.com",
+			"homepage": "https://github.com/mcustiel",
+			"role": "Administrator"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Codeception\\Extension\\": "src/Extension",
+			"Mcustiel\\Phiremock\\Codeception\\Extension\\": "src/PhiremockExtension"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Mcustiel\\Phiremock\\Codeception\\Module\\Tests\\Helpers\\": "tests/_helpers"
+		}
+	},
+	"name": "mcustiel/phiremock-codeception-extension",
+	"type": "project",
+	"description": "Codeception extension for Phiremock. Allows to stub remote services for HTTP requests.",
+	"license": "GPL-3.0-or-later",
+	"require": {
+		"php": "^8.0",
+		"codeception/codeception": "^5.0",
+		"symfony/process": ">=5.0.0 <8.0.0"
+	},
+	"require-dev": {
+		"mcustiel/phiremock-server": "^1.0",
+		"codeception/module-rest": "^3.0",
+		"codeception/module-phpbrowser": "^3.0",
+		"guzzlehttp/guzzle": "^7.0"
+	},
+	"suggest": {
+		"mcustiel/phiremock-server": "As a dev-requirement. Allows the extension to start phiremock automatically from vendor/bin",
+		"guzzlehttp/guzzle": "Version 6 to execute phiremock-server as default"
+	},
+	"prefer-stable": true
 }
