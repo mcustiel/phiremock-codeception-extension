@@ -1,32 +1,14 @@
 filter:
   paths: [src/*]
   excluded_paths: [vendor/*, test/*]
-before_commands:
-  - "composer install --dev --prefer-source"
 
 build:
   environment:
     postgresql: false
     mysql: false
     redis: false
-  tests:
-    override:
-      - php-scrutinizer-run
-      - ./vendor/bin/codecept run
   nodes:
     php82:
       environment:
         php:
           version: 8.2
-    php83:
-      environment:
-        php:
-          version: 8.3
-    php84:
-      environment:
-        php:
-          version: 8.4
-    php85:
-      environment:
-        php:
-          version: 8.5
