@@ -1,6 +1,6 @@
 filter:
   paths: [src/*]
-  excluded_paths: [vendor/*, test/*]
+  excluded_paths: [vendor/*, tests/*]
 
 build:
   environment:
